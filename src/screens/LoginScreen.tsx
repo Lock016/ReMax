@@ -7,7 +7,7 @@ import { RootState } from '../store';
 
 export const LoginScreen = () => {
 
-    const {status} = useSelector((state: RootState) => state.auth);
+    const { status } = useSelector((state: RootState) => state.auth);
 
     return (
         <View>
