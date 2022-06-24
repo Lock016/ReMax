@@ -2,12 +2,9 @@ import 'react-native-gesture-handler';
 
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { View, Text } from 'react-native';
-import { LoginScreen } from './src/screens/LoginScreen';
-import DrawerNavigation from './src/navigation/DrawerNavigation';
 import { store } from './src/store';
 import { Provider } from 'react-redux';
-import SplashScreen from './src/screens/SplashScreen';
+import NavigationStack from './src/navigation/NavigationStack';
 
 export const App = () => {
     return (
@@ -15,7 +12,7 @@ export const App = () => {
             <NavigationContainer
                 
             >
-                <DrawerNavigation />
+                <NavigationStack />
                 {/* <SplashScreen /> */}
             </NavigationContainer>
         </Provider>

@@ -1,11 +1,18 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer'
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer'
 import { globalStyles } from '../theme/globalTheme'
 import React from 'react'
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import DrawerItemComponent from './DrawerItemComponent'
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/auth';
 
-const DrawerComponent = ( { navigation }: DrawerContentComponentProps) => {
+const DrawerComponent = ( props : DrawerContentComponentProps) => {
+
+    const dispatch = useDispatch();
+    const { navigation, state } = props
     return(
-        <DrawerContentScrollView>
+        <DrawerContentScrollView contentContainerStyle={{ flex: 1 }}>
             {/* User Info */}
             <View style={ styles.userContainer}>
                 <View>
@@ -20,37 +27,59 @@ const DrawerComponent = ( { navigation }: DrawerContentComponentProps) => {
                 </View>
             </View>
             {/* Drawer Elements */}
+            {/* <DrawerItemList { ...props }/> */}
+            <DrawerItemComponent
+                icon='person'
+                name='Contactos'
+                navigation={ navigation }
+                state = { state }
+                index = { 0 }
+                stack = 'ContactsStack'
+            />
+            <DrawerItemComponent
+                icon='home'
+                name='Propiedades'
+                navigation={ navigation }
+                state = { state }
+                index = { 1 }
+                stack = 'PropertiesStack'
+            />
+            <DrawerItemComponent
+                icon='location-on'
+                name='Ubicaciones'
+                navigation={ navigation }
+                state = { state }
+                index = { 2 }
+                stack = 'LocationsStack'
+            />
+            <DrawerItemComponent
+                icon='speaker-notes'
+                name='Recordatorios'
+                navigation={ navigation }
+                state = { state }
+                index = { 3 }
+                stack = 'RemindersStack'
+            />
+            <DrawerItemComponent
+                icon='face'
+                name='Login pal Cruz'
+                navigation={ navigation }
+                state = { state }
+                index = { 4 }
+                stack = 'LoginScreen'
+            />
+            <View style={{flex: 1}}/>
             <TouchableOpacity
-                onPress={ () => navigation.navigate('ContactsStack')}
-                style={ styles.drawerItem }
+                style={ styles.logoutButton }
+                onPress={ () => dispatch(logout())}
             >
-                <Text>Contactos</Text>
+                <Icon
+                    name='logout'
+                    size={ 45 }
+                    color='#4f4f4f'
+                />
+                <Text style={styles.logoutText}>Cerrar sesión</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                onPress={ () => navigation.navigate('PropertiesStack')}
-                style={ styles.drawerItem }
-            >
-                <Text>Propiedades</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={ () => navigation.navigate('LocationsStack')}
-                style={ styles.drawerItem }
-            >
-                <Text>Ubicaciones</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={ () => navigation.navigate('RemindersStack')}
-                style={ styles.drawerItem }
-            >
-                <Text>Recordatorios</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={ () => navigation.navigate('LoginScreen')}
-                style={ styles.drawerItem }
-            >
-                <Text>Login pal cruz</Text>
-            </TouchableOpacity>
-
         </DrawerContentScrollView>
     )
 }
@@ -60,7 +89,27 @@ export default DrawerComponent
 const styles = StyleSheet.create({
     drawerItem: {
         marginVertical: 10,
-        
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    drawerItemText: {
+        fontFamily: 'Gotham-Bold',
+        fontSize: 20,
+    },
+    logoutButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: 20,
+        borderTopColor: 'rgba(0,0,0,0.2)',
+        borderTopWidth: 1,
+        paddingVertical: 10,
+        marginRight: 20
+    },
+    logoutText: {
+        fontFamily: 'Gotham-Bold',
+        fontSize: 20,
+        color: '#4f4f4f',
+        marginLeft: 10,
     },
     userCity: {
         fontSize: 16,

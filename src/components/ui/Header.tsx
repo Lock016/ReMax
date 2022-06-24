@@ -10,7 +10,7 @@ const windowWidth = Dimensions.get('window').width;
 
 export const Header = () => {
 
-    const navigation = useNavigation<Nav>()
+    const navigation = useNavigation<Nav>();
     return (
         <View style={styles.headerContainer} >
             <TouchableOpacity
@@ -25,14 +25,15 @@ export const Header = () => {
                     color={'red'}
                 />
             </TouchableOpacity>
-
-            <View style={styles.imageContainer}>
-                <Image
-                    source={require('../../assets/images/splash.png')}
-                    style={styles.image}
-                />
+            <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={require('../../assets/images/splash.png')}
+                        style={styles.image}
+                    />
+                </View>
             </View>
-            <View style={{ flex: 1 }} />
+
         </View>
     )
 }
@@ -42,7 +43,6 @@ const styles = StyleSheet.create({
         height: 60,
         width: windowWidth,
         alignContent: 'center',
-        justifyContent: 'center',
         flexDirection: 'row',
         backgroundColor: 'white',
         shadowColor: "#000",
@@ -56,10 +56,10 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     button: {
-        width: 120,
+    
     },
     imageContainer: {
-        marginTop: 10,
+        marginRight: 30,
         height: 35,
         width: 200,
     },

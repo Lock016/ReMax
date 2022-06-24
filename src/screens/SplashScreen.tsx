@@ -1,9 +1,11 @@
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-
 const windowWidth = Dimensions.get('window').width;
 
+
 const SplashScreen = () => {
+   
+   
     return (
         <View
             style={{

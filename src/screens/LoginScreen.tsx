@@ -2,26 +2,23 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../theme/globalTheme'
 import BlueButton from '../components/BlueButton';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { useDispatch } from 'react-redux';
 
 export const LoginScreen = () => {
-
-    const { status } = useSelector((state: RootState) => state.auth);
-
+    
     return (
         <View>
-            <Text 
+            <Text
                 style={globalStyles.title}
-            >{status}</Text>
+            >login</Text>
             <BlueButton
                 text='Buscar'
-                onPress={() => {}}
+                onPress={() => console.log('first button')}
             />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    
+
 })

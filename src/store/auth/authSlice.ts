@@ -8,7 +8,7 @@ interface AuthState {
     errorMessage: string | null;
 }
 const initialState: AuthState = {
-    status: 'checking',
+    status: 'authenticated',
     uid: null,
     email: null,
     name: null,

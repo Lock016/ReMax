@@ -1,17 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../theme/globalTheme'
 import React from 'react'
-import { Header } from '../../components/ui/Header'
+import { Header } from '../../components/ui/Header';          
 
-const PropertiesScreen = () => {
+
+export const PropertiesScreen = () => {
+
     return(
         <View style={{flex:1}} >
-           {/* <Header  /> */}
+            <Header/>
+           <Text>Hola mundo</Text>
         </View>
     )
 }
 
-export default PropertiesScreen
+
 
 const styles = StyleSheet.create({
     

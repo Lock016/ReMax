@@ -3,12 +3,11 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { LoginScreen } from '../screens/LoginScreen';
 import DrawerComponent from '../components/DrawerComponent';
-// import ContactsScreen from '../screens/Contacts/ContactsScreen';
 import ContactsStack from './ContactsStack';
 import PropertiesStack from './PropertiesStack';
 import LocationsStack from './LocationsStack';
 import RemindersStack from './RemindersStack';
-import { Header } from '../components/ui/Header';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -17,8 +16,7 @@ const DrawerNavigation = () => {
         <Drawer.Navigator
             initialRouteName='ContactsStack'
             screenOptions={{
-                headerShown: true, // Oculta la hamburguesa
-                header:()=> <Header/>
+                headerShown: false, // Oculta la hamburguesa
             }}
             drawerContent={(props) => <DrawerComponent { ...props } />}
         >
