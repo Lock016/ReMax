@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import ContactsScreen from '../screens/Contacts/ContactsScreen';
+import {ContactsScreen} from '../screens/Contacts/ContactsScreen';
 import React from 'react';
 
 

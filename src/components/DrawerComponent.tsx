@@ -26,8 +26,7 @@ const DrawerComponent = ( props : DrawerContentComponentProps) => {
                     <Text style={ styles.userCity}>Ciudad de México</Text>
                 </View>
             </View>
-            {/* Drawer Elements */}
-            {/* <DrawerItemList { ...props }/> */}
+          
             <DrawerItemComponent
                 icon='person'
                 name='Contactos'
