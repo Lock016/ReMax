@@ -1,24 +1,26 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { globalStyles } from '../theme/globalTheme'
-import BlueButton from '../components/BlueButton';
-import { useDispatch } from 'react-redux';
+import { Image, StyleSheet, Text, View } from 'react-native'
 
 export const LoginScreen = () => {
-    
+
     return (
         <View>
-            <Text
-                style={globalStyles.title}
-            >login</Text>
-            <BlueButton
-                text='Buscar'
-                onPress={() => console.log('first button')}
-            />
+           <View style={styles.imageContainer}>
+               <Image
+                 source={require('./../assets/images/ReMax_Balloon.png')}
+             />
+           </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    imageContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%'
 
+    }
 })
