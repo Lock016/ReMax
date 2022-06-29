@@ -7,6 +7,7 @@ interface Props {
 }
 
 const InputComponent = ( { label }: Props) => {
+    
     return(
         <View style={ styles.formContainer }>
             <Text style={globalStyles.inputLabel}>{ label }</Text>

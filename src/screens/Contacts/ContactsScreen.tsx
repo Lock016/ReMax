@@ -26,7 +26,7 @@ export const ContactsScreen = () => {
           {...data[0]}
         />
 
-        <ButtonAdd path={'addContact'} />
+        <ButtonAdd path={'ContactAddScreen'} />
 
       </View>
     </SafeAreaView>

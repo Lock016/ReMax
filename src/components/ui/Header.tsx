@@ -8,24 +8,40 @@ interface Nav extends DrawerNavigationProp<any, any> { }
 const windowWidth = Dimensions.get('window').width;
 
 
-export const Header = () => {
+interface Props {
+    backButton?: boolean,
+}
+
+export const Header = ({ backButton }: Props) => {
 
     const navigation = useNavigation<Nav>();
     return (
-        <View style={styles.headerContainer} >
-            <TouchableOpacity
-                activeOpacity={.7}
-                style={styles.button}
-                onPress={() => navigation.toggleDrawer()}
+        <View style={styles.headerContainer}>
 
-            >
-                <Icon
-                    name='menu'
-                    size={60}
-                    color={'red'}
-                />
-            </TouchableOpacity>
-            <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+            {
+                backButton ? (
+                    <TouchableOpacity
+                        onPress={() => navigation.goBack()}
+                        style={styles.button}
+                        activeOpacity={.7}
+                    >
+                        <Icon name="arrow-back" size={60} color="red" />
+                    </TouchableOpacity>
+                )
+                    : <TouchableOpacity
+                        activeOpacity={.7}
+                        style={styles.button}
+                        onPress={() => navigation.toggleDrawer()}
+                    >
+                        <Icon
+                            name='menu'
+                            size={60}
+                            color={'red'}
+                        />
+                    </TouchableOpacity>
+            }
+
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <View style={styles.imageContainer}>
                     <Image
                         source={require('../../assets/images/splash.png')}
@@ -56,7 +72,7 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     button: {
-    
+
     },
     imageContainer: {
         marginRight: 30,
