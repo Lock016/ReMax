@@ -4,10 +4,15 @@ import { InitialValues } from '../interfaces/InitialValues';
 import * as Yup from "yup";
 import { Formik, FormikProps } from 'formik';
 import LinearGradient from 'react-native-linear-gradient';
+import { useDispatch } from 'react-redux';
+import { startLogin } from '../store/auth/thunks';
+import { useAppDispatch } from '../hooks/hooks';
 
 export const LoginScreen = () => {
 
-    const initialValues: InitialValues = { email: '', password: '' };
+
+    const dispatch = useAppDispatch();
+    const initialValues: InitialValues = { email: 'jopi20101@gmail.com', password: 'jopigonzalez123' };
 
     const validationSchema = Yup.object().shape({
         email: Yup.string()
@@ -19,8 +24,9 @@ export const LoginScreen = () => {
     })
 
 
-    const handleSubmit = (values: InitialValues) => {
+    const handleLogin = (values: InitialValues) => {
         console.log(values);
+        dispatch(startLogin(values))
     }
 
     return (
@@ -45,21 +51,23 @@ export const LoginScreen = () => {
                         initialValues={initialValues}
                         enableReinitialize={true}
                         validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
+                        onSubmit={handleLogin}
                     >
-                        {({ handleChange, values }: FormikProps<InitialValues>) => (
+                        {({ handleChange, values, handleSubmit, handleBlur }: FormikProps<InitialValues>) => (
                             <>
                                 <View style={styles.inputsContainer}>
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Email"
                                         onChangeText={handleChange('email')}
+                                        onBlur={handleBlur('email')}
                                         value={values.email}
                                     />
                                     <TextInput
                                         style={styles.input}
                                         placeholder="**********"
                                         onChangeText={handleChange('password')}
+                                        onBlur={handleBlur('password')}
                                         value={values.password}
                                         secureTextEntry={true}
                                     />
@@ -67,17 +75,19 @@ export const LoginScreen = () => {
 
                                 <TouchableOpacity
                                     style={styles.submitButton}
-                                    activeOpacity={.8}>
-                                    <Text
-                                        style={styles.submitButtonText}
-                                    >Iniciar sesión</Text>
+                                    activeOpacity={.8}
+                                    onPress={handleSubmit}
+                                >
+                                    <Text style={styles.submitButtonText}>
+                                        Iniciar sesión
+                                    </Text>
                                 </TouchableOpacity>
                             </>
                         )}
                     </Formik>
                 </View>
             </View>
-        </LinearGradient>
+        </LinearGradient >
 
     )
 }
