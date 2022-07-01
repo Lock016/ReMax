@@ -4,6 +4,9 @@ import { globalStyles } from '../../theme/globalTheme';
 import { Header } from '../../components/ui/Header';
 import { CardContact } from '../../components/Contacts/CardContact';
 import { ButtonAdd } from '../../components/ui/ButtonAdd';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { useAppSelector } from '../../hooks/hooks';
 
 const data = [
   {
@@ -16,10 +19,13 @@ const data = [
 ]
 
 export const ContactsScreen = () => {
+  const auth = useAppSelector(state => state.auth)
+
+  console.log(auth)
   return (
-    <SafeAreaView style={ globalStyles.safeAreaContainer }>
+    <SafeAreaView style={globalStyles.safeAreaContainer}>
       <Header />
-      <View style={ globalStyles.container }>
+      <View style={globalStyles.container}>
         <Text style={globalStyles.title}>Contactos</Text>
 
         <CardContact
