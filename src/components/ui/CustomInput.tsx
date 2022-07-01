@@ -7,12 +7,13 @@ interface Props extends TextInputProps {
   errors: FormikErrors<string> | undefined,
   touched: boolean | undefined,
   bigger?: boolean,
+  margin?: number,
 }
 
 
-export const CustomInput = ({ label, errors, touched, bigger, ...props }: Props) => {
+export const CustomInput = ({ label, errors, touched, bigger, margin=0, ...props  }: Props) => {
   return (
-    <View>
+    <View style={{marginHorizontal: margin}}>
       <Text style={globalStyles.inputLabel}>{label}</Text>
       <View style={{
         ...globalStyles.inputContainer,

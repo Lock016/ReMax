@@ -14,7 +14,8 @@ export const globalStyles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginHorizontal: 20,
+        // paddingHorizontal: 10,
+        paddingHorizontal: 20,
         marginVertical: 30,
     },
     safeAreaContainer: {
@@ -30,7 +31,6 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         paddingHorizontal: 10,
-
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

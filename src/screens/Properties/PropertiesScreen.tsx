@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View, SafeAreaView, TouchableOpacity,ScrollView } from 'react-native'
+import { Button, StyleSheet, Text, View, SafeAreaView, TouchableOpacity,ScrollView, Image } from 'react-native'
 import { globalStyles } from '../../theme/globalTheme'
 import { Header } from '../../components/ui/Header';  
 import { Picker } from '@react-native-picker/picker';
@@ -10,9 +10,17 @@ import { residencialItems, commercialItems, industrialItems } from '../../data/p
 import { CustomInput } from '../../components/ui/CustomInput';
 import { SmallCustomInput } from '../../components/ui/SmallCustomInput';
 import React, { useState } from 'react'
+import BlueButton from '../../components/BlueButton';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+interface Nav extends StackNavigationProp<any, any> { }
 
 
 export const PropertiesScreen = () => {
+
+    const navigate = useNavigation<Nav>();
 
     const [isActive, setIsActive] = useState({
         op1: true,
@@ -21,11 +29,14 @@ export const PropertiesScreen = () => {
     });
 
     const [selectedValue, setSelectedValue] = useState();
+    const [selectedRooms, setSelectedRooms] = useState();
+    const [selectedBathrooms, setSelectedBathrooms] = useState();
+    const [selectedParking, setSelectedParking] = useState();
 
     return(
         <SafeAreaView style={globalStyles.safeAreaContainer} >
             <Header/>
-            <ScrollView style={globalStyles.container} >
+            <ScrollView style={{...globalStyles.container,}} showsVerticalScrollIndicator={false}>
                 <Text style={globalStyles.title}>Propiedades</Text>
                 <Formik
                     initialValues={{
@@ -34,13 +45,14 @@ export const PropertiesScreen = () => {
                         location: '',
                         fromPrice: '',
                         toPrice: '',
-                        size: '',
+                        fromSize: '',
+                        toSize: '',
                         rooms: '',
                         bathrooms: '',
                         parking: '',
                     }}
-                    onSubmit={(values) => {
-                        console.log(values)
+                    onSubmit={ () => {
+                        navigate.navigate('PropertiesResults');
                     }}
                     validationSchema={
                         yup.object({
@@ -48,7 +60,8 @@ export const PropertiesScreen = () => {
                             location: yup.string().required('La ubicación es requerida'),
                             fromPrice: yup.string().required('El precio es requerido'),
                             toPrice: yup.string().required('El precio es requerido'),
-                            size: yup.string().required('El tamaño es requerido'),
+                            fromSize: yup.string().required('El tamaño es requerido'),
+                            toSize: yup.string().required('El tamaño es requerido'),
                             rooms: yup.string().required('El número de habitaciones es requerido'),
                             bathrooms: yup.string().required('El número de baños es requerido'),
                             parking: yup.string().required('El número de estacionamientos es requerido'),
@@ -87,7 +100,8 @@ export const PropertiesScreen = () => {
                                 errors={errors.location}
                                 onChangeText={handleChange('location')}
                                 onBlur={handleBlur('location')}
-                                value={values.location}      
+                                value={values.location}
+                                margin={20}
                             />
                             {/* <CustomInput
                                 touched={touched.price}
@@ -107,8 +121,8 @@ export const PropertiesScreen = () => {
                                     touched={touched.fromPrice}
                                     label="Desde"
                                     errors={errors.fromPrice}
-                                    onChangeText={handleChange('price')}
-                                    onBlur={handleBlur('price')}
+                                    onChangeText={handleChange('fromPrice')}
+                                    onBlur={handleBlur('fromPrice')}
                                     value={values.fromPrice}
                                     keyboardType="numeric"
                                 />
@@ -116,36 +130,106 @@ export const PropertiesScreen = () => {
                                     touched={touched.toPrice}
                                     label="Hasta"
                                     errors={errors.toPrice}
-                                    onChangeText={handleChange('price')}
-                                    onBlur={handleBlur('price')}
+                                    onChangeText={handleChange('toPrice')}
+                                    onBlur={handleBlur('toPrice')}
                                     value={values.toPrice}
                                     keyboardType="numeric"
                                 />
 
                             </View>
-                            <CustomInput
-                                touched={touched.size}
-                                label="Tamaño"
-                                errors={errors.size}
-                                onChangeText={handleChange('size')}
-                                onBlur={handleBlur('size')}
-                                value={values.size}
-                                keyboardType="numeric"
-                            />
+                            <Text style={globalStyles.inputLabel}>Tamaño</Text>
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between'
+                            }}>
+                                <SmallCustomInput
+                                    touched={touched.fromSize}
+                                    label="Desde"
+                                    errors={errors.fromSize}
+                                    onChangeText={handleChange('fromSize')}
+                                    onBlur={handleBlur('fromSize')}
+                                    value={values.fromSize}
+                                    keyboardType="numeric"
+                                />
+                                <SmallCustomInput
+                                    touched={touched.toSize}
+                                    label="Hasta"
+                                    errors={errors.toSize}
+                                    onChangeText={handleChange('toSize')}
+                                    onBlur={handleBlur('toSize')}
+                                    value={values.toSize}
+                                    keyboardType="numeric"
+                                />
+                            </View>
+                            <Text style={globalStyles.inputLabel}>Habitaciones</Text>
+                            <Picker
+                                selectedValue={selectedRooms}
+                                onValueChange={(itemValue, itemIndex) => setSelectedRooms(itemValue)}
+                                style={globalStyles.picker}
+                            >
+                                <Picker.Item label="1" value="1" />
+                                <Picker.Item label="2" value="2" />
+                                <Picker.Item label="3" value="3" />
+                                <Picker.Item label="4" value="4" />
+                                <Picker.Item label="5+" value="5+" />
+                            </Picker>
+                            <Text style={globalStyles.inputLabel}>Baños</Text>
+                            <Picker
+                                selectedValue={selectedBathrooms}
+                                onValueChange={(itemValue, itemIndex) => setSelectedBathrooms(itemValue)}
+                                style={globalStyles.picker}
+                            >
+                                <Picker.Item label="1" value="1" />
+                                <Picker.Item label="1.5" value="1.5" />
+                                <Picker.Item label="2" value="2" />
+                                <Picker.Item label="2.5" value="2.5" />
+                                <Picker.Item label="3" value="3" />
+                                <Picker.Item label="3.5" value="3.5" />
+                                <Picker.Item label="4+" value="4+" />
+                            </Picker>
+                            <Text style={globalStyles.inputLabel}>Estacionamientos</Text>
+                            <Picker
+                                selectedValue={selectedParking}
+                                onValueChange={(itemValue, itemIndex) => setSelectedParking(itemValue)}
+                                style={globalStyles.picker}
+                            >
+                                <Picker.Item label="1" value="1" />
+                                <Picker.Item label="2" value="2" />
+                                <Picker.Item label="3" value="3" />
+                                <Picker.Item label="4" value="4" />
+                            </Picker>
+                            <View style={ styles.cardContainer}>
+                                <View style={ styles.imageContainer}>
+                                    <Image
+                                        source={{ uri: 'https://media.istockphoto.com/vectors/vector-illustration-of-red-house-icon-vector-id155666671?k=20&m=155666671&s=612x612&w=0&h=sL5gRpVmrGcZBVu5jEjF5Ne7A4ZrBCuh5d6DpRv3mps=' }}
+                                        style={ styles.image }
+                                    />
+                                </View>
+                                <View style={ styles.infoContainer}>
+                                    <Text style= { styles.propertyTitle}>Pelícano 424 Real del Mezquital</Text>
+                                    <Text style= { styles.propertyPrice}>$1,000,000</Text>
+                                    <Text style= { styles.propertyType}>Casa</Text>
+                                </View>
+                                <Icon
+                                    name='arrow-forward-ios'
+                                    color={'#003DA5'}
+                                    size={30}
+                                />
+                            </View>
+                            <View
+                                style={{
+                                    marginBottom: 10,
+                                    alignItems: 'center',    
+                                }}
+                            >
+                                <BlueButton
+                                    text='Buscar'
+                                    onPress={handleSubmit}
+                                />
+                            </View>
                         </View>
                     )}
                 </Formik>
-
-{/* 
-                <InputComponent
-                    label="Precio"
-                />
-                <InputComponent
-                    label="Tamaño"
-                />
-                <InputComponent
-                    label="Oficina"
-                /> */}
             </ScrollView>
         </SafeAreaView>
     )
@@ -154,5 +238,56 @@ export const PropertiesScreen = () => {
 
 
 const styles = StyleSheet.create({
-    
+    cardContainer: {
+        marginTop: 10,
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 10,
+        borderRadius: 10,
+        marginBottom: 20,
+        // marginHorizontal: 10,
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.30,
+        shadowRadius: 4.65,
+
+        elevation: 7,
+    },
+    image: {
+        width: 50,
+        height: 50,
+        borderRadius: 100,
+        borderWidth: 1,
+        borderColor: '#003DA5',
+    },
+    imageContainer: {
+        borderRadius: 100
+    },
+    infoContainer: {
+
+    }, 
+    propertyPrice: {
+        fontSize: 12,
+        color: '#656565',
+        marginBottom: 5,
+        fontFamily: 'Gotham-Bold'
+    },
+    propertyTitle: {
+        fontSize: 14,
+        fontFamily: 'Gotham-Bold',
+        color: '#003DA5',
+        marginBottom: 5,
+    },
+    propertyType: {
+        fontSize: 12,
+        color: '#656565',
+        marginBottom: 5,
+        fontFamily: 'GothamBook'
+    }
 })
