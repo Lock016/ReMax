@@ -1,5 +1,7 @@
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { startAskingPermission } from '../store/permissions';
+import { useAppSelector } from '../hooks/hooks';
 const windowWidth = Dimensions.get('window').width;
 
 
