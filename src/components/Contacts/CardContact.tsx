@@ -7,23 +7,21 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RightSwipeActions } from './RightSwipeActions';
 interface Nav extends StackNavigationProp<any, any> { }
 interface Props {
+  id: number;
   name: string,
   number: string
   email: string
   path: string
 }
 
-
-
-
-export const CardContact = ({ name, number, email, path }: Props) => {
-
-
-
+export const CardContact = ({ name, number, email, path, id}: Props) => {
   const navigation = useNavigation<Nav>();
 
   return (
-    <Swipeable renderRightActions={RightSwipeActions}>
+    <Swipeable
+      renderRightActions={RightSwipeActions}
+      onSwipeableOpen={() => { console.log('id mandado por redux'+ id) }}
+    >
 
       <View style={styles.cardContainer}>
         <View style={styles.textContainer} >
@@ -40,7 +38,7 @@ export const CardContact = ({ name, number, email, path }: Props) => {
         >
           <Icon
             name='arrow-forward-ios'
-            size={60}
+            size={30}
             color={'#003DA5'}
 
           />
@@ -55,9 +53,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginVertical: 10,
-    height: 110,
+    height: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    marginHorizontal: 1,
     flexDirection: 'row',
     shadowColor: "#000",
     shadowOffset: {

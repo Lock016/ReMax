@@ -15,7 +15,7 @@ export const RightSwipeActions = () => {
             >
                 <Icon
                     name='edit'
-                    size={40}
+                    size={30}
                     color={'#1cadec'}
 
                 />
@@ -30,7 +30,7 @@ export const RightSwipeActions = () => {
 
                 <Icon
                     name='delete'
-                    size={40}
+                    size={30}
                     color={'red'}
 
                 />
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         borderRadius: 10,
-        width: '40%',
+        width: '30%',
         marginVertical: 10,
         justifyContent: 'space-around',
         alignItems: 'center',

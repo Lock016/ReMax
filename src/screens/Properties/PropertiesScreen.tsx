@@ -36,8 +36,8 @@ export const PropertiesScreen = () => {
     return(
         <SafeAreaView style={globalStyles.safeAreaContainer} >
             <Header/>
-            <ScrollView style={{...globalStyles.container,}} showsVerticalScrollIndicator={false}>
-                <Text style={globalStyles.title}>Propiedades</Text>
+            <ScrollView style={{...globalStyles.container, paddingHorizontal: 0}} showsVerticalScrollIndicator={false}>
+                <Text style={{ ...globalStyles.title, paddingHorizontal: 20}}>Propiedades</Text>
                 <Formik
                     initialValues={{
                         propertyType: '',
@@ -54,19 +54,6 @@ export const PropertiesScreen = () => {
                     onSubmit={ () => {
                         navigate.navigate('PropertiesResults');
                     }}
-                    validationSchema={
-                        yup.object({
-                            propertyType: yup.string().required('El tipo de propiedad es requerido'),
-                            location: yup.string().required('La ubicación es requerida'),
-                            fromPrice: yup.string().required('El precio es requerido'),
-                            toPrice: yup.string().required('El precio es requerido'),
-                            fromSize: yup.string().required('El tamaño es requerido'),
-                            toSize: yup.string().required('El tamaño es requerido'),
-                            rooms: yup.string().required('El número de habitaciones es requerido'),
-                            bathrooms: yup.string().required('El número de baños es requerido'),
-                            parking: yup.string().required('El número de estacionamientos es requerido'),
-                        })
-                    }
                 >
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
                         <View style={globalStyles.formContainer}>
@@ -101,7 +88,6 @@ export const PropertiesScreen = () => {
                                 onChangeText={handleChange('location')}
                                 onBlur={handleBlur('location')}
                                 value={values.location}
-                                margin={20}
                             />
                             {/* <CustomInput
                                 touched={touched.price}
@@ -198,7 +184,7 @@ export const PropertiesScreen = () => {
                                 <Picker.Item label="3" value="3" />
                                 <Picker.Item label="4" value="4" />
                             </Picker>
-                            <View style={ styles.cardContainer}>
+                            {/* <View style={ styles.cardContainer}>
                                 <View style={ styles.imageContainer}>
                                     <Image
                                         source={{ uri: 'https://media.istockphoto.com/vectors/vector-illustration-of-red-house-icon-vector-id155666671?k=20&m=155666671&s=612x612&w=0&h=sL5gRpVmrGcZBVu5jEjF5Ne7A4ZrBCuh5d6DpRv3mps=' }}
@@ -215,7 +201,7 @@ export const PropertiesScreen = () => {
                                     color={'#003DA5'}
                                     size={30}
                                 />
-                            </View>
+                            </View> */}
                             <View
                                 style={{
                                     marginBottom: 10,
@@ -263,8 +249,6 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 100,
-        borderWidth: 1,
-        borderColor: '#003DA5',
     },
     imageContainer: {
         borderRadius: 100

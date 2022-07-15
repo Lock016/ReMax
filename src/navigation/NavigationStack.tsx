@@ -38,7 +38,6 @@ const NavigationStack = () => {
         <Stack.Navigator
             screenOptions={{ headerShown: false }}
         >
-            {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
             {
                 status === 'authenticated' ?
                     <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
@@ -46,7 +45,6 @@ const NavigationStack = () => {
                     <Stack.Screen name="LoginScreen" component={LoginScreen} />
 
             }
-            {/* <Stack.Screen name="LoginScreen" component={LoginScreen} /> */}
         </Stack.Navigator>
     );
 }

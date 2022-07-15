@@ -25,6 +25,7 @@ export const globalStyles = StyleSheet.create({
 
     formContainer: {
         marginVertical: 10,
+        paddingHorizontal: 20,
     },
     inputContainer: {
         height: 50,

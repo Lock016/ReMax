@@ -1,8 +1,8 @@
 import { Dispatch } from 'redux';
 import { remaxApi } from '../../api';
-import { User } from '../../interfaces/authInterfaces';
+import { ErrorAuth, User } from '../../interfaces/authInterfaces';
 import { login } from './authSlice';
-
+// import from 'axios'; 'axios';
 
 type DataUser = {
     email: string;
@@ -11,14 +11,17 @@ type DataUser = {
 
 export const startLogin = (dataUser: DataUser) => {
     return async (dispatch: Dispatch) => {
-        const response = await remaxApi.post<User>('/auth/login/', dataUser)
-            
 
-        if (response?.status === 200) {
+        try {
+            const response = await remaxApi.post<User>('/auth/login/', dataUser)
+
             dispatch(login(response.data));
+
+        } catch (error : any) {
+            console.log(error.response.detail);
         }
-        else {
-            console.log("Error")
-        }
+
+
+
     };
 };

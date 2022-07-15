@@ -10,3 +10,7 @@ export interface User {
     fname: string;
     lname: string;
 }
+
+export interface ErrorAuth {
+    detail: string;
+}
