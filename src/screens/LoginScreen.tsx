@@ -25,7 +25,6 @@ export const LoginScreen = () => {
 
 
     const handleLogin = (values: InitialValues) => {
-        console.log(values);
         dispatch(startLogin(values))
     }
 

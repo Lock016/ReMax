@@ -1,13 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Header } from '../../components/ui/Header'
+import { Map } from '../../components/Locations/Map'
 
 const LocationsScreen = () => {
-    return(
-        <View>
-            <Header/>
-            <Text>LocationsScreen</Text>
-        </View>
+    return (
+        <Map />
     )
 }
 
