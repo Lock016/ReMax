@@ -5,6 +5,7 @@ export interface Token {
 }
 
 export interface User {
+    
     security:  Token;
     email: string;
     fname: string;

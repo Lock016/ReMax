@@ -11,17 +11,14 @@ type DataUser = {
 
 export const startLogin = (dataUser: DataUser) => {
     return async (dispatch: Dispatch) => {
-
+        console.log(dataUser);
         try {
-            const response = await remaxApi.post<User>('/auth/login/', dataUser)
-
+            const response = await remaxApi.post<User>('/auth/login/', dataUser);
+            console.log("Response API", response)
             dispatch(login(response.data));
-
-        } catch (error : any) {
+        } catch (error: any) {
+            console.log("Response API", error)
             console.log(error.response.detail);
         }
-
-
-
     };
 };
