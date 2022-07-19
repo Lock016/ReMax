@@ -4,77 +4,72 @@ import { globalStyles } from '../theme/globalTheme'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DrawerItemComponent from './DrawerItemComponent'
-import { useDispatch } from 'react-redux';
 import { logout } from '../store/auth';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
-const DrawerComponent = ( props : DrawerContentComponentProps) => {
+const DrawerComponent = (props: DrawerContentComponentProps) => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector(state => state.auth);
+    
+    
     const { navigation, state } = props
-    return(
+    return (
         <DrawerContentScrollView contentContainerStyle={{ flex: 1 }}>
             {/* User Info */}
-            <View style={ styles.userContainer}>
+            <View style={styles.userContainer}>
                 <View>
                     <Image
-                        source={{ uri: 'https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg'}}
-                        style={ styles.userImage }
+                        source={{ uri: 'https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg' }}
+                        style={styles.userImage}
                     />
                 </View>
-                <View style={ styles.userInfo }>
-                    <Text style={{ ...globalStyles.title, fontSize: 20}}>Damiany Rosales</Text>
-                    <Text style={ styles.userCity}>Ciudad de México</Text>
+                <View style={styles.userInfo}>
+                    <Text style={{ ...globalStyles.title, fontSize: 20 }}>{`${user?.fname}         ${user?.lname}`}</Text>
+                    <Text style={styles.userCity}>Ciudad de México</Text>
                 </View>
             </View>
-          
+
             <DrawerItemComponent
                 icon='person'
                 name='Contactos'
-                navigation={ navigation }
-                state = { state }
-                index = { 0 }
-                stack = 'ContactsStack'
+                navigation={navigation}
+                state={state}
+                index={0}
+                stack='ContactsStack'
             />
             <DrawerItemComponent
                 icon='home'
                 name='Propiedades'
-                navigation={ navigation }
-                state = { state }
-                index = { 1 }
-                stack = 'PropertiesStack'
+                navigation={navigation}
+                state={state}
+                index={1}
+                stack='PropertiesStack'
             />
             <DrawerItemComponent
                 icon='location-on'
                 name='Ubicaciones'
-                navigation={ navigation }
-                state = { state }
-                index = { 2 }
-                stack = 'LocationsStack'
+                navigation={navigation}
+                state={state}
+                index={2}
+                stack='LocationsStack'
             />
             <DrawerItemComponent
                 icon='speaker-notes'
                 name='Recordatorios'
-                navigation={ navigation }
-                state = { state }
-                index = { 3 }
-                stack = 'RemindersStack'
+                navigation={navigation}
+                state={state}
+                index={3}
+                stack='RemindersStack'
             />
-            <DrawerItemComponent
-                icon='face'
-                name='Login pal Cruz'
-                navigation={ navigation }
-                state = { state }
-                index = { 4 }
-                stack = 'LoginScreen'
-            />
-            <View style={{flex: 1}}/>
+            <View style={{ flex: 1 }} />
             <TouchableOpacity
-                style={ styles.logoutButton }
-                onPress={ () => dispatch(logout())}
+                style={styles.logoutButton}
+                onPress={() => dispatch(logout())}
             >
                 <Icon
                     name='logout'
-                    size={ 45 }
+                    size={45}
                     color='#4f4f4f'
                 />
                 <Text style={styles.logoutText}>Cerrar sesión</Text>

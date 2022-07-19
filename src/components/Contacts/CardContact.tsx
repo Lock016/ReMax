@@ -5,45 +5,59 @@ import { useNavigation } from '@react-navigation/native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RightSwipeActions } from './RightSwipeActions';
+import { useAppDispatch } from '../../hooks';
+import { startDeleteContact } from '../../store/contacts';
 interface Nav extends StackNavigationProp<any, any> { }
 interface Props {
-  id: number;
+  id: string;
   name: string,
   number: string
   email: string
   path: string
 }
 
-export const CardContact = ({ name, number, email, path, id}: Props) => {
+export const CardContact = ({ name, number, email, id,}: Props) => {
   const navigation = useNavigation<Nav>();
+  const dispatch = useAppDispatch();
+
+  const onDelete = () => {
+    dispatch(startDeleteContact(id));
+  }
+
+  const onUpdate = () => {
+    navigation.navigate('ContactAddScreen', { title: 'Editar Contacto' });
+    
+  }
+
 
   return (
     <Swipeable
-      renderRightActions={RightSwipeActions}
-      onSwipeableOpen={() => { console.log('id mandado por redux'+ id) }}
+
+      renderRightActions={() => <RightSwipeActions onDelete={onDelete} onUpdate={
+        onUpdate
+      } />}
+      onSwipeableOpen={() => {}}
     >
 
-      <View style={styles.cardContainer}>
+      <TouchableOpacity style={styles.cardContainer}
+        activeOpacity={.9}
+        onPress={() => navigation.navigate('ContactDetails')}
+      >
         <View style={styles.textContainer} >
           <Text style={styles.nameText}>{name}</Text>
           <Text style={styles.numberText}>{number}</Text>
           <Text style={styles.emailText}>{email}</Text>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={.7}
-          style={styles.button}
-          onPress={() => navigation.navigate(path)}
-
-        >
+        <View>
           <Icon
             name='arrow-forward-ios'
             size={30}
             color={'#003DA5'}
 
           />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     </Swipeable>
   )
 }

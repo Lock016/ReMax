@@ -21,6 +21,7 @@
     "formik": "^2.2.9",
     "react": "17.0.2",
     "react-native": "0.68.1",
+    "react-native-add-calendar-event": "^4.0.0",
     "react-native-async-storage": "^0.0.1",
     "react-native-config": "^1.4.6",
     "react-native-gesture-handler": "^2.4.2",

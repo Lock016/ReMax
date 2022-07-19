@@ -1,14 +1,190 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../theme/globalTheme'
 import React from 'react'
 import { Header } from '../../components/ui/Header'
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
+import * as yup from 'yup'
+import { Formik } from 'formik';
+import { CustomInput } from '../../components/ui/CustomInput';
+
+const eventConfig: AddCalendarEvent.CreateOptions = {
+    title: "Evento de prueba jejeje", 
+    location: 'Huizache 1 circuito chamula 615 Durango Mexico',
+    notes: 'jfdsa;lkjffkljfklj;sdfjlkdsafjksdafdas'
+
+};
+
+const createCalendarEvent = async () => {
+    const eventInfo = await AddCalendarEvent.presentEventCreatingDialog(eventConfig)
+
+    console.log(eventInfo)
+}
+
+
+
 
 const RemindersScreen = () => {
-    return(
-        <View>
-            <Header/>
-            <Text style={globalStyles.title}>RemindersScreen</Text>
-        </View>
+    return (
+        <SafeAreaView style={globalStyles.safeAreaContainer}>
+            <Header />
+            <ScrollView
+                style={globalStyles.container}
+                showsVerticalScrollIndicator={false}
+            >
+                <Text style={globalStyles.title}>CrearActividad</Text>
+
+                <Formik
+                    initialValues={{
+                        user: '',
+                        property: '',
+                        date: '',
+                        comments: '',
+                        activityType: '',
+                        quantity: '',
+                        coin: '',
+                        agent: '',
+                        office: '',
+                        notes: ''
+                    }}
+                    enableReinitialize={true}
+                    onSubmit={
+                        createCalendarEvent
+                    }
+                    validationSchema={
+                        yup.object({
+                            // name: yup.string()
+                            //     .required('Nombre requerido')
+                            //     .max(30, 'Nombre muy largo'),
+                            // lname: yup.string()
+                            //     .required('Apellido requerido')
+                            //     .max(30, 'Apellido muy largo'),
+                            // email: yup.string()
+                            //     .required('Email requerido')
+                            //     .email('Email invalido'),
+                            // phone: yup.string()
+                            //     .required('Telefono requerido')
+                            //     .matches(/^[0-9]{10}$/, 'Telefono invalido')
+                            //     .min(10, 'Telefono invalido'),
+                            // office: yup.string()
+                            //     .required('Oficina requerida'),
+                            // origin: yup.string()
+                            //     .required('Origen requerida'),
+                            // agent: yup.string()
+                            //     .required('Agente requerido'),
+                            // state: yup.string()
+                            //     .required('Estado requerido'),
+                            // type: yup.string()
+                            //     .required('Tipo requerido'),
+                            // notes: yup.string()
+                            //     .required('Notas requeridas')
+
+                        })
+                    }
+
+                >
+                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                        <View style={globalStyles.formContainer}>
+
+                            {/* <CustomInput
+                                touched={touched.name}
+                                label="Nombre"
+                                errors={errors.name}
+                                onChangeText={handleChange('name')}
+                                onBlur={handleBlur('name')}
+                                value={values.name}
+                            />
+                            <CustomInput
+                                touched={touched.lname}
+                                label="Apellido"
+                                errors={errors.lname}
+                                onChangeText={handleChange('lname')}
+                                onBlur={handleBlur('lname')}
+                                value={values.lname}
+                            />
+                            <CustomInput
+                                touched={touched.email}
+                                label="Email"
+                                errors={errors.email}
+                                onChangeText={handleChange('email')}
+                                onBlur={handleBlur('email')}
+                                value={values.email}
+                            />
+                            <CustomInput
+                                touched={touched.phone}
+                                label="Telefono"
+                                errors={errors.phone}
+                                onChangeText={handleChange('phone')}
+                                onBlur={handleBlur('phone')}
+                                value={values.phone}
+                                keyboardType="numeric"
+                            />
+                            <CustomInput
+
+                                touched={touched.office}
+                                label="Oficina"
+                                errors={errors.office}
+                                onChangeText={handleChange('office')}
+                                onBlur={handleBlur('office')}
+                                value={values.office}
+                            />
+                            <CustomInput
+
+                                touched={touched.origin}
+                                label="Origen"
+                                errors={errors.origin}
+                                onChangeText={handleChange('origin')}
+                                onBlur={handleBlur('origin')}
+                                value={values.origin}
+                            />
+                            <CustomInput
+
+                                touched={touched.agent}
+                                label="Agente"
+                                errors={errors.agent}
+                                onChangeText={handleChange('agent')}
+                                onBlur={handleBlur('agent')}
+                                value={values.agent}
+                            />
+                            <CustomInput
+
+                                touched={touched.state}
+                                label="Estado"
+                                errors={errors.state}
+                                onChangeText={handleChange('state')}
+                                onBlur={handleBlur('state')}
+                                value={values.state}
+                            />
+                            <CustomInput
+
+                                touched={touched.type}
+                                label="Tipo"
+                                errors={errors.type}
+                                onChangeText={handleChange('type')}
+                                onBlur={handleBlur('type')}
+                                value={values.type}
+                            /> */}
+                            <CustomInput
+                                bigger={true}
+                                touched={touched.notes}
+                                label="Notas"
+                                errors={errors.notes}
+                                onChangeText={handleChange('notes')}
+                                onBlur={handleBlur('notes')}
+                                value={values.notes}
+                                numberOfLines={6}
+                                multiline
+                            />
+                            <Button title="Crear" onPress={handleSubmit} />
+                        </View>
+                    )}
+                </Formik>
+
+
+
+            </ScrollView>
+        </SafeAreaView>
+
+
     )
 }
 

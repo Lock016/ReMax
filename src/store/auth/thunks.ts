@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { remaxApi } from '../../api';
-import { ErrorAuth, User } from '../../interfaces/authInterfaces';
+import { User } from '../../interfaces/authInterfaces';
 import { login } from './authSlice';
 // import from 'axios'; 'axios';
 

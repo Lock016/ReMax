@@ -13,12 +13,16 @@ import React, { useState } from 'react'
 import BlueButton from '../../components/BlueButton';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { startGettingProperties } from '../../store/properties';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface Nav extends StackNavigationProp<any, any> { }
 
 
 export const PropertiesScreen = () => {
+
+    const dispatch = useAppDispatch();
 
     const navigate = useNavigation<Nav>();
 
@@ -52,7 +56,9 @@ export const PropertiesScreen = () => {
                         parking: '',
                     }}
                     onSubmit={ () => {
-                        navigate.navigate('PropertiesResults');
+                       
+                        dispatch(startGettingProperties());
+                         navigate.navigate('PropertiesResults');
                     }}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (

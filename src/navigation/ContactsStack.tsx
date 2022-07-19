@@ -2,9 +2,20 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { ContactsScreen } from '../screens/Contacts/ContactsScreen';
 import React from 'react';
 import { ContactAdd } from '../screens/Contacts/ContactAdd';
+import { ContactDetails } from '../screens/Contacts/ContactDetails';
 
 
-const Stack = createStackNavigator();
+export type RootStackContactParamList = {
+    ContactsScreen: undefined;
+    ContactAddScreen:{
+        title: string;
+    };
+    ContactDetails: undefined;
+    
+};
+
+
+const Stack = createStackNavigator<RootStackContactParamList>();
 
 const ContactsStack = () => {
     return (
@@ -12,7 +23,11 @@ const ContactsStack = () => {
             screenOptions={{ headerShown: false }}
         >
             <Stack.Screen name="ContactsScreen" component={ContactsScreen} />
-            <Stack.Screen name="ContactAddScreen" component={ContactAdd} />
+            <Stack.Screen name="ContactAddScreen" initialParams={{
+                title: 'Agregar Contacto'
+            }} component={ContactAdd} />
+            <Stack.Screen name="ContactDetails" component={ContactDetails} />
+
         </Stack.Navigator>
     );
 }

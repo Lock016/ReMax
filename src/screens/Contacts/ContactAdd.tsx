@@ -5,10 +5,13 @@ import { globalStyles } from '../../theme/globalTheme'
 import * as yup from 'yup'
 import { Formik, } from 'formik'
 import { CustomInput } from '../../components/ui/CustomInput'
+import { StackScreenProps } from '@react-navigation/stack'
+import { RootStackContactParamList } from '../../navigation/ContactsStack'
 
-export const ContactAdd = () => {
+interface Props extends StackScreenProps<RootStackContactParamList, 'ContactAddScreen'> { }
+export const ContactAdd = ({ route }: Props) => {
 
-
+    const { title="Agregar Contacto" } = route.params;
 
     return (
         <View style={globalStyles.safeAreaContainer}>
@@ -17,7 +20,7 @@ export const ContactAdd = () => {
                 style={globalStyles.container}
                 showsVerticalScrollIndicator={false}
             >
-                <Text style={globalStyles.title}>Crear Contacto</Text>
+                <Text style={globalStyles.title}>{title}</Text>
 
                 <Formik
                     initialValues={{
@@ -158,12 +161,6 @@ export const ContactAdd = () => {
                                 numberOfLines={6}
                                 multiline
                             />
-
-
-
-
-
-
                         </View>
                     )}
                 </Formik>

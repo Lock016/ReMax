@@ -3,18 +3,34 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { propertiesInterface } from '../../interfaces/propertiesInterface';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { setActiveProperty } from '../../store/properties';
 import React from 'react'
 
 interface Nav extends StackNavigationProp<any, any> { }
 
-const PropertiesCard = ({ title, price, image, type, id}: propertiesInterface) => {
+const PropertiesCard = ({ title, price, image, type, id, item}: propertiesInterface) => {
+
+    const dispatch = useAppDispatch();
 
     const navigation = useNavigation<Nav>();
+
+    const truncate = (str: string) => {
+        if (str.length > 27) {
+            return str.substring(0, 27) + '...';
+        } else {
+            return str;
+        }
+    }
 
     return (
         <TouchableOpacity 
             style={{ ...styles.cardContainer, marginHorizontal: 20}}
-            onPress={ () => navigation.navigate('PropertyDetail', id)}
+            onPress={ () => {
+                dispatch(setActiveProperty(item));
+                navigation.navigate('PropertyDetail');
+            }}
+            activeOpacity={0.9}
         >
             <View style={ styles.imageContainer}>
                 <Image
@@ -23,7 +39,7 @@ const PropertiesCard = ({ title, price, image, type, id}: propertiesInterface) =
                 />
             </View>
             <View style={ styles.infoContainer}>
-                <Text style= { styles.propertyTitle}>{ title }</Text>
+                <Text style= { styles.propertyTitle}>{ truncate(title) }</Text>
                 <Text style= { styles.propertyPrice}>{ price }</Text>
                 <Text style= { styles.propertyType}>{ type }</Text>
             </View>

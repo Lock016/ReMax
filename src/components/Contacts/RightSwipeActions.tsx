@@ -1,12 +1,21 @@
 import React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-export const RightSwipeActions = () => {
+
+interface Props {
+    onDelete: () => void;
+    onUpdate : () => void;
+}
+
+export const RightSwipeActions = ({ onDelete, onUpdate }: Props) => {
+
+   
     return (
         <View
             style={styles.container}
         >
             <TouchableOpacity
+             onPress={onUpdate}
                 style={{
                     height: '100%',
                     alignItems: 'center',
@@ -21,11 +30,14 @@ export const RightSwipeActions = () => {
                 />
             </TouchableOpacity>
             <TouchableOpacity
+
+                onPress={onDelete}
                 style={{
                     height: '100%',
                     alignItems: 'center',
                     justifyContent: 'center',
                 }}
+
             >
 
                 <Icon

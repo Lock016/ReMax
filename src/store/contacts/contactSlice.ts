@@ -1,45 +1,98 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 
 interface ContactState {
-    contacts: Contact[];
-    loading: boolean;
-    activeContact: Contact | null;
+  contacts: Contact[];
+  loading: boolean;
+  activeContact: Contact | null;
 }
 
 const initialState: ContactState = {
-    contacts: [],
-    loading: true,
-    activeContact: null,
+  contacts: [
+    {
+      id: "1",
+      name: 'Johan Israel Gonzalez Vargas',
+      number: '6182593051',
+      email: 'jopi20101@gmail.com',
+
+    },
+    {
+      id: "2",
+      name: 'Johan Israel Gonzalez Vargas',
+      number: '6182593051',
+      email: 'jopi20101@gmail.com',
+
+    },
+    {
+      id: "3",
+      name: 'Johan Israel Gonzalez Vargas',
+      number: '6182593051',
+      email: 'jopi20101@gmail.com',
+
+    },
+    {
+      id: "5",
+      name: 'Johan Israel Gonzalez Vargas',
+      number: '6182593051',
+      email: 'jopi20101@gmail.com',
+
+    },
+    {
+      id: '6',
+      name: 'Johan Israel Gonzalez Vargas',
+      number: '6182593051',
+      email: 'jopi20101@gmail.com',
+
+    },
+    {
+      id: '7',
+      name: 'Johan Israel Gonzalez Vargas',
+      number: '6182593051',
+      email: 'jopi20101@gmail.com',
+
+    },
+
+  ],
+  loading: true,
+  activeContact: {
+    id: "6",
+    name: 'Johan Israel Gonzalez Vargas',
+    number: '6182593051',
+    email: 'jopi20101@gmail.com',
+  },
 };
 
 
 export const contactSlice = createSlice({
-    name: 'contact',
-    initialState,
-    reducers: {
-        setContacts: (state, action) => {
-            state.contacts = action.payload;
-            state.loading = false;
-        },
-        setActiveContact: (state, action) => {
-            state.activeContact = action.payload;
-        },
-        updateContact: (state, action) => {
-            state.contacts = state.contacts.map(contact => {
-                if (contact.id === action.payload.id) {
-                    return action.payload;
-                }
-                return contact;
-            });
-        },
-        deleteContact: (state, action) => {
-            state.contacts = state.contacts.filter(contact => contact.id !== action.payload);
-            state.loading = true;
+  name: 'contact',
+  initialState,
+  reducers: {
+    setContacts: (state: ContactState, { payload }: PayloadAction) => {
+      state.contacts = payload;
+    },
+    addContact: (state: ContactState, { payload }: PayloadAction) => {
+      state.contacts.push(payload);
+    },
+    setLoading: (state: ContactState, { payload }: PayloadAction<boolean>) => {
+      state.loading = payload;
+    },
+    setActiveContact: (state: ContactState, { payload }: PayloadAction) => {
+      state.activeContact = payload;
+    },
+    updateContact: (state: ContactState, { payload }: PayloadAction) => {
+      state.contacts = state.contacts.map(contact => {
+        if (contact.id === payload.id) {
+          return payload;
         }
+        return contact;
+      });
+    },
+    deleteContact: (state: ContactState, { payload }: PayloadAction<string>) => {
+      state.contacts = state.contacts.filter(contact => contact.id !== payload);
     }
+  }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { setContacts, setActiveContact, updateContact, deleteContact } = contactSlice.actions;
+export const { setContacts, setActiveContact, updateContact, deleteContact, addContact, setLoading } = contactSlice.actions;

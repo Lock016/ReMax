@@ -17,7 +17,9 @@ const DrawerNavigation = () => {
             initialRouteName='ContactsStack'
             screenOptions={{
                 headerShown: false, // Oculta la hamburguesa
+                unmountOnBlur: true, // Oculta el componente cuando se sale de la pantalla
             }}
+            detachInactiveScreens={true}
             drawerContent={(props) => <DrawerComponent { ...props } />}
         >
             <Drawer.Screen name='ContactsStack' options={{ title: 'Contactos'}} component={ContactsStack} />

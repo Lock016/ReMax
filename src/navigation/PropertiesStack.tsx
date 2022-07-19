@@ -12,7 +12,7 @@ const PropertiesStack = () => {
         <Stack.Navigator
             screenOptions={{ 
                 headerShown:false,
-             }}
+            }}
         >
             <Stack.Screen name="PropertiesScreen" component={PropertiesScreen} />
             <Stack.Screen name="PropertiesResults" component={PropertiesResults} />
