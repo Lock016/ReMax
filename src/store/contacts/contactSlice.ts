@@ -1,65 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Contact, Office, Origin } from '../../interfaces/contactsInterfaces';
 
 
 interface ContactState {
   contacts: Contact[];
   loading: boolean;
   activeContact: Contact | null;
+  offices: Office[];
+  origins: Origin[];
 }
 
 const initialState: ContactState = {
-  contacts: [
-    {
-      id: "1",
-      name: 'Johan Israel Gonzalez Vargas',
-      number: '6182593051',
-      email: 'jopi20101@gmail.com',
-
-    },
-    {
-      id: "2",
-      name: 'Johan Israel Gonzalez Vargas',
-      number: '6182593051',
-      email: 'jopi20101@gmail.com',
-
-    },
-    {
-      id: "3",
-      name: 'Johan Israel Gonzalez Vargas',
-      number: '6182593051',
-      email: 'jopi20101@gmail.com',
-
-    },
-    {
-      id: "5",
-      name: 'Johan Israel Gonzalez Vargas',
-      number: '6182593051',
-      email: 'jopi20101@gmail.com',
-
-    },
-    {
-      id: '6',
-      name: 'Johan Israel Gonzalez Vargas',
-      number: '6182593051',
-      email: 'jopi20101@gmail.com',
-
-    },
-    {
-      id: '7',
-      name: 'Johan Israel Gonzalez Vargas',
-      number: '6182593051',
-      email: 'jopi20101@gmail.com',
-
-    },
-
-  ],
+  contacts: [],
   loading: true,
-  activeContact: {
-    id: "6",
-    name: 'Johan Israel Gonzalez Vargas',
-    number: '6182593051',
-    email: 'jopi20101@gmail.com',
-  },
+  activeContact: null,
+  offices: [],
+  origins:[],
 };
 
 
@@ -67,19 +23,19 @@ export const contactSlice = createSlice({
   name: 'contact',
   initialState,
   reducers: {
-    setContacts: (state: ContactState, { payload }: PayloadAction) => {
+    setContacts: (state: ContactState, { payload }: PayloadAction<Contact[]>) => {
       state.contacts = payload;
     },
-    addContact: (state: ContactState, { payload }: PayloadAction) => {
+    addContact: (state: ContactState, { payload }: PayloadAction<Contact>) => {
       state.contacts.push(payload);
     },
     setLoading: (state: ContactState, { payload }: PayloadAction<boolean>) => {
       state.loading = payload;
     },
-    setActiveContact: (state: ContactState, { payload }: PayloadAction) => {
+    setActiveContact: (state: ContactState, { payload }: PayloadAction<Contact>) => {
       state.activeContact = payload;
     },
-    updateContact: (state: ContactState, { payload }: PayloadAction) => {
+    updateContact: (state: ContactState, { payload }: PayloadAction<Contact>) => {
       state.contacts = state.contacts.map(contact => {
         if (contact.id === payload.id) {
           return payload;
@@ -87,12 +43,28 @@ export const contactSlice = createSlice({
         return contact;
       });
     },
-    deleteContact: (state: ContactState, { payload }: PayloadAction<string>) => {
-      state.contacts = state.contacts.filter(contact => contact.id !== payload);
+    deleteContact: (state: ContactState, { payload }: PayloadAction<Contact>) => {
+      state.contacts = state.contacts.filter(contact => contact.id !== payload.id);
+      
+    },
+    setOffices: (state: ContactState, { payload }: PayloadAction<Office[]>) => {
+      state.offices = payload;
+    },
+    setOrigins: (state: ContactState, { payload }: PayloadAction<Origin[]>) => {
+      state.origins = payload;
     }
+
+    
   }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { setContacts, setActiveContact, updateContact, deleteContact, addContact, setLoading } = contactSlice.actions;
+export const {  setContacts,
+                setActiveContact,
+                updateContact,
+                deleteContact,
+                addContact,
+                setLoading,
+                setOffices,
+                setOrigins } = contactSlice.actions;

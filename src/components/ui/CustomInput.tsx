@@ -17,7 +17,7 @@ export const CustomInput = ({ label, errors, touched, bigger, margin=0, ...props
       <Text style={globalStyles.inputLabel}>{label}</Text>
       <View style={{
         ...globalStyles.inputContainer,
-        height: bigger ? 200 : 50,
+        height: bigger ? 150 : 50,
       }}>
         <TextInput
           {...props}

@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../interfaces/authInterfaces';
+import { AuthData } from '../../interfaces/authInterfaces';
 
 interface AuthState {
     status: 'checking' | 'not-authenticated' | 'authenticated';
     errorMessage: string | null;
-    user: User | null;
+    user: AuthData | null;
 }
 const initialState: AuthState = {
     status: 'not-authenticated',
@@ -16,7 +16,7 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        login: (state: AuthState, { payload }: PayloadAction<User>) => {
+        login: (state: AuthState, { payload }: PayloadAction<AuthData>) => {
             state.status = 'authenticated';
             state.user = payload;
         },

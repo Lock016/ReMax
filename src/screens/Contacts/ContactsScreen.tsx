@@ -37,7 +37,7 @@ export const ContactsScreen = () => {
                 showsVerticalScrollIndicator={false}
                 data={contacts}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <CardContact {...item} />}
+                renderItem={({ item }) => <CardContact contact={item} />}
               />
               <ButtonAdd path={'ContactAddScreen'} />
             </>

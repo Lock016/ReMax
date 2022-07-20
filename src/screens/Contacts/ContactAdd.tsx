@@ -1,17 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, ScrollView, } from 'react-native'
-import { Header } from '../../components/ui/Header'
-import { globalStyles } from '../../theme/globalTheme'
-import * as yup from 'yup'
-import { Formik, } from 'formik'
-import { CustomInput } from '../../components/ui/CustomInput'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackContactParamList } from '../../navigation/ContactsStack'
+import { Formik, } from 'formik'
+import * as yup from 'yup'
+import { globalStyles } from '../../theme/globalTheme'
+import { Header } from '../../components/ui/Header'
+import { CustomInput } from '../../components/ui/CustomInput'
+import { Picker } from '@react-native-picker/picker'
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { startAddingContact, startGettingOffices, startGettingOrigins } from '../../store/contacts'
+import BlueButton from '../../components/BlueButton'
 
 interface Props extends StackScreenProps<RootStackContactParamList, 'ContactAddScreen'> { }
 export const ContactAdd = ({ route }: Props) => {
-
-    const { title="Agregar Contacto" } = route.params;
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(startGettingOffices())
+        dispatch(startGettingOrigins())
+    }, [])
+    const { offices, origins } = useAppSelector(state => state.contacts)
+    const { title } = route.params;
 
     return (
         <View style={globalStyles.safeAreaContainer}>
@@ -24,22 +33,24 @@ export const ContactAdd = ({ route }: Props) => {
 
                 <Formik
                     initialValues={{
-                        name: '',
+                        fname: '',
                         lname: '',
                         email: '',
-                        phone: '',
-                        office: '',
-                        origin: '',
-                        agent: '',
-                        state: '',
-                        type: '',
+                        cellphone: '',
+                        office: 0,
+                        origin: 0,
+                        status: false,
                         notes: ''
                     }}
                     enableReinitialize={true}
-                    onSubmit={values => console.log(values)}
+                    onSubmit={(values) => {
+                        console.log(values)
+                        dispatch(startAddingContact(values))
+                    }
+                    }
                     validationSchema={
                         yup.object({
-                            name: yup.string()
+                            fname: yup.string()
                                 .required('Nombre requerido')
                                 .max(30, 'Nombre muy largo'),
                             lname: yup.string()
@@ -48,20 +59,16 @@ export const ContactAdd = ({ route }: Props) => {
                             email: yup.string()
                                 .required('Email requerido')
                                 .email('Email invalido'),
-                            phone: yup.string()
+                                cellphone: yup.string()
                                 .required('Telefono requerido')
                                 .matches(/^[0-9]{10}$/, 'Telefono invalido')
                                 .min(10, 'Telefono invalido'),
-                            office: yup.string()
+                            office: yup.number()
                                 .required('Oficina requerida'),
-                            origin: yup.string()
+                            origin: yup.number()
                                 .required('Origen requerida'),
-                            agent: yup.string()
-                                .required('Agente requerido'),
-                            state: yup.string()
+                            status: yup.boolean()
                                 .required('Estado requerido'),
-                            type: yup.string()
-                                .required('Tipo requerido'),
                             notes: yup.string()
                                 .required('Notas requeridas')
 
@@ -69,16 +76,16 @@ export const ContactAdd = ({ route }: Props) => {
                     }
 
                 >
-                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
                         <View style={globalStyles.formContainer}>
 
                             <CustomInput
-                                touched={touched.name}
+                                touched={touched.fname}
                                 label="Nombre"
-                                errors={errors.name}
-                                onChangeText={handleChange('name')}
-                                onBlur={handleBlur('name')}
-                                value={values.name}
+                                errors={errors.fname}
+                                onChangeText={handleChange('fname')}
+                                onBlur={handleBlur('fname')}
+                                value={values.fname}
                             />
                             <CustomInput
                                 touched={touched.lname}
@@ -97,59 +104,54 @@ export const ContactAdd = ({ route }: Props) => {
                                 value={values.email}
                             />
                             <CustomInput
-                                touched={touched.phone}
+                                touched={touched.cellphone}
                                 label="Telefono"
-                                errors={errors.phone}
-                                onChangeText={handleChange('phone')}
-                                onBlur={handleBlur('phone')}
-                                value={values.phone}
+                                errors={errors.cellphone}
+                                onChangeText={handleChange('cellphone')}
+                                onBlur={handleBlur('cellphone')}
+                                value={values.cellphone}
                                 keyboardType="numeric"
                             />
-                            <CustomInput
+                            <Text style={globalStyles.inputLabel}>Estatus</Text>
+                            <Picker
+                                selectedValue={values.status}
+                                onValueChange={(itemValue, itemIndex) => setFieldValue('status', itemValue)}
+                                style={globalStyles.picker}
+                            >
+                               
+                                        <Picker.Item label={'Activo'} value={true} />
+                                        <Picker.Item label={'Inactivo'} value={false} />
+                                  
+                            </Picker>
+                            <Text>{errors.status && touched.status }</Text>
 
-                                touched={touched.office}
-                                label="Oficina"
-                                errors={errors.office}
-                                onChangeText={handleChange('office')}
-                                onBlur={handleBlur('office')}
-                                value={values.office}
-                            />
-                            <CustomInput
 
-                                touched={touched.origin}
-                                label="Origen"
-                                errors={errors.origin}
-                                onChangeText={handleChange('origin')}
-                                onBlur={handleBlur('origin')}
-                                value={values.origin}
-                            />
-                            <CustomInput
+                            <Text style={globalStyles.inputLabel}>Oficina</Text>
+                            <Picker
+                                selectedValue={values.office}
+                                onValueChange={(itemValue, itemIndex) => setFieldValue('office', itemValue)}
+                                style={globalStyles.picker}
+                            >
+                                {
+                                    offices.map(office => (
+                                        <Picker.Item key={office.id} label={office.name} value={office.id} />
+                                    ))
+                                }
+                            </Picker>
 
-                                touched={touched.agent}
-                                label="Agente"
-                                errors={errors.agent}
-                                onChangeText={handleChange('agent')}
-                                onBlur={handleBlur('agent')}
-                                value={values.agent}
-                            />
-                            <CustomInput
-
-                                touched={touched.state}
-                                label="Estado"
-                                errors={errors.state}
-                                onChangeText={handleChange('state')}
-                                onBlur={handleBlur('state')}
-                                value={values.state}
-                            />
-                            <CustomInput
-
-                                touched={touched.type}
-                                label="Tipo"
-                                errors={errors.type}
-                                onChangeText={handleChange('type')}
-                                onBlur={handleBlur('type')}
-                                value={values.type}
-                            />
+                            <Text style={globalStyles.inputLabel}>Origen</Text>
+                            <Picker
+                                selectedValue={values.origin}
+                                onValueChange={(itemValue, itemIndex) => setFieldValue('origin', itemValue)}
+                                style={globalStyles.picker}
+                            >
+                                {
+                                    origins.map(origin => (
+                                        <Picker.Item key={origin.id} label={origin.name} value={origin.id} />
+                                    ))
+                                }
+                            </Picker>
+                           
                             <CustomInput
                                 bigger={true}
                                 touched={touched.notes}
@@ -158,10 +160,22 @@ export const ContactAdd = ({ route }: Props) => {
                                 onChangeText={handleChange('notes')}
                                 onBlur={handleBlur('notes')}
                                 value={values.notes}
-                                numberOfLines={6}
+                                numberOfLines={5}
                                 multiline
                             />
+                            <View
+                                style={{
+                                    marginBottom: 10,
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <BlueButton
+                                    text='Guardar'
+                                    onPress={handleSubmit}
+                                />
+                            </View>
                         </View>
+
                     )}
                 </Formik>
 

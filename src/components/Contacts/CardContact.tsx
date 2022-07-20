@@ -7,26 +7,24 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RightSwipeActions } from './RightSwipeActions';
 import { useAppDispatch } from '../../hooks';
 import { startDeleteContact } from '../../store/contacts';
+import { Contact } from '../../interfaces/contactsInterfaces';
 interface Nav extends StackNavigationProp<any, any> { }
+
 interface Props {
-  id: string;
-  name: string,
-  number: string
-  email: string
-  path: string
+  contact: Contact;
 }
 
-export const CardContact = ({ name, number, email, id,}: Props) => {
+export const CardContact = ({ contact }: Props) => {
   const navigation = useNavigation<Nav>();
   const dispatch = useAppDispatch();
 
   const onDelete = () => {
-    dispatch(startDeleteContact(id));
+    dispatch(startDeleteContact(contact));
   }
 
   const onUpdate = () => {
     navigation.navigate('ContactAddScreen', { title: 'Editar Contacto' });
-    
+
   }
 
 
@@ -36,7 +34,7 @@ export const CardContact = ({ name, number, email, id,}: Props) => {
       renderRightActions={() => <RightSwipeActions onDelete={onDelete} onUpdate={
         onUpdate
       } />}
-      onSwipeableOpen={() => {}}
+      onSwipeableOpen={() => { }}
     >
 
       <TouchableOpacity style={styles.cardContainer}
@@ -44,9 +42,9 @@ export const CardContact = ({ name, number, email, id,}: Props) => {
         onPress={() => navigation.navigate('ContactDetails')}
       >
         <View style={styles.textContainer} >
-          <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.numberText}>{number}</Text>
-          <Text style={styles.emailText}>{email}</Text>
+          <Text style={styles.nameText}>{`${contact.fname} ${contact.lname}` }</Text>
+          <Text style={styles.numberText}>{contact.cellphone}</Text>
+          <Text style={styles.emailText}>{contact.email}</Text>
         </View>
 
         <View>
@@ -68,7 +66,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     height: 100,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: 1,
     flexDirection: 'row',
