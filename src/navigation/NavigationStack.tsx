@@ -5,7 +5,8 @@ import DrawerNavigation from './DrawerNavigation';
 import React, { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../hooks/hooks';
 import { AppState } from 'react-native';
-import { startAskingPermission, startCheckingPermission} from '../store/permissions';
+import { startAskingPermission, startCheckingPermission } from '../store/permissions';
+import { checkToken } from '../store/auth';
 
 
 
@@ -15,7 +16,7 @@ const NavigationStack = () => {
     const status = useAppSelector(state => state.auth.status)
     const locationStatus = useAppSelector(state => state.permisisons.locationStatus)
     const dispatch = useAppDispatch()
-    
+
 
     useEffect(() => {
         AppState.addEventListener("change", state => {
@@ -23,17 +24,23 @@ const NavigationStack = () => {
             dispatch(startCheckingPermission());
         });
     }, [])
-    
+
     useEffect(() => {
         if (locationStatus !== 'granted') {
             dispatch(startAskingPermission());
-          
+
         }
     }, [locationStatus])
 
+    useEffect(() => {
+        if (status === 'checking') {
+            dispatch(checkToken())
+        }
+    }, [])
 
 
-    if (status === 'checking' && locationStatus !== 'granted' ) return <SplashScreen />
+
+    if (status === 'checking' && locationStatus !== 'granted') return <SplashScreen />
     return (
         <Stack.Navigator
             screenOptions={{ headerShown: false }}

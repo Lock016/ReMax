@@ -4,7 +4,7 @@ import { globalStyles } from '../theme/globalTheme'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DrawerItemComponent from './DrawerItemComponent'
-import { logout } from '../store/auth';
+import { startLogout } from '../store/auth';
 import { useAppDispatch, useAppSelector } from '../hooks';
 
 const DrawerComponent = (props: DrawerContentComponentProps) => {
@@ -65,7 +65,7 @@ const DrawerComponent = (props: DrawerContentComponentProps) => {
             <View style={{ flex: 1 }} />
             <TouchableOpacity
                 style={styles.logoutButton}
-                onPress={() => dispatch(logout())}
+                onPress={() => dispatch(startLogout())}
             >
                 <Icon
                     name='logout'
