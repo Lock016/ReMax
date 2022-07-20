@@ -1,6 +1,9 @@
+import { StackNavigationProp } from "@react-navigation/stack";
+import { AxiosError } from "axios";
 import { Dispatch } from "redux";
 import { remaxApi } from "../../api";
 import { Contact, Office, Origin } from '../../interfaces/contactsInterfaces';
+import { RootStackContactParamList } from "../../navigation/ContactsStack";
 import { RootState } from '../store';
 import { setLoading, addContact, deleteContact, updateContact, setOffices, setOrigins, setContacts } from "./contactSlice";
 
@@ -14,7 +17,8 @@ interface FormData {
     origin: number;
     status: boolean;
     notes: string;
-
+    id?: number;
+    navigation: StackNavigationProp<RootStackContactParamList, "ContactAddScreen", undefined>;
 
 }
 
@@ -40,20 +44,23 @@ export const startGettingContacts = () => {
 
 };
 
-export const startAddingContact = ({ ...values }: FormData) => {
+export const startAddingContact = ({ navigation, ...values }: FormData) => {
     return async (dispatch: Dispatch, getState: () => RootState) => {
 
-
         try {
-            //TODO: USAR EL GETSTATE PARA OBTENER EL ID DEL USUARIO, PERO HABLAR ANTES CON DAMIANNY
+            dispatch(setLoading(true));
+            const { user } = getState().auth
             const { data } = await remaxApi.post<Contact>('/client/create/', {
-                //MANDAR VALUES Y EL AGENT QUE ES EL ID DE USUARIO
+                agent:user?.id,
+                ...values
             })
-
             dispatch(addContact(data));
-
-        } catch (error: any) {
-            console.log(error.response.detail);
+            navigation.pop();
+            dispatch(setLoading(false));
+        } catch (err : any) {
+            console.log(err.response.detail);
+            // dispatch(setLoading(false));
+            
         }
 
     }
@@ -74,16 +81,23 @@ export const startDeleteContact = (contact: Contact) => {
     }
 }
 
-export const startUpdateContact = (contact: Contact) => {
-    return async (dispatch: Dispatch) => {
+export const startUpdateContact = ({ navigation, id, ...values }: FormData) => {
+    return async (dispatch: Dispatch, getState: () => RootState) => {
+
         try {
-
-            // const response = await remaxApi.post<Contact>('/auth/login/', contact)
-
-            dispatch(updateContact(contact));
-
-        } catch (error: any) {
-            console.log(error.response.detail);
+           
+            dispatch(setLoading(true));
+            const { user } = getState().auth
+            const { data } = await remaxApi.put<Contact>(`/client/${id}/`, {
+                agent:user?.id,
+                ...values
+            })
+            dispatch(updateContact(data));
+            navigation.pop();
+            dispatch(setLoading(false));
+        } catch (err : any) {
+            console.log(err.response.detail);
+            
         }
 
     }

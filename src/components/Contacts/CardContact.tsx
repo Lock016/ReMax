@@ -23,7 +23,7 @@ export const CardContact = ({ contact }: Props) => {
   }
 
   const onUpdate = () => {
-    navigation.navigate('ContactAddScreen', { title: 'Editar Contacto' });
+    navigation.navigate('ContactAddScreen', { title: 'Editar Contacto', contact });  
 
   }
 

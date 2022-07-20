@@ -3,12 +3,14 @@ import { ContactsScreen } from '../screens/Contacts/ContactsScreen';
 import React from 'react';
 import { ContactAdd } from '../screens/Contacts/ContactAdd';
 import { ContactDetails } from '../screens/Contacts/ContactDetails';
+import { Contact } from '../interfaces/contactsInterfaces';
 
 
 export type RootStackContactParamList = {
     ContactsScreen: undefined;
     ContactAddScreen:{
         title: string;
+        contact: Contact;
     };
     ContactDetails: undefined;
     

@@ -9,18 +9,21 @@ import { Header } from '../../components/ui/Header'
 import { CustomInput } from '../../components/ui/CustomInput'
 import { Picker } from '@react-native-picker/picker'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { startAddingContact, startGettingOffices, startGettingOrigins } from '../../store/contacts'
+import { startAddingContact, startGettingOffices, startGettingOrigins, startUpdateContact } from '../../store/contacts'
 import BlueButton from '../../components/BlueButton'
 
 interface Props extends StackScreenProps<RootStackContactParamList, 'ContactAddScreen'> { }
-export const ContactAdd = ({ route }: Props) => {
+export const ContactAdd = ({ route, navigation }: Props) => {
     const dispatch = useAppDispatch();
+
     useEffect(() => {
         dispatch(startGettingOffices())
         dispatch(startGettingOrigins())
     }, [])
     const { offices, origins } = useAppSelector(state => state.contacts)
-    const { title } = route.params;
+    const { title, contact } = route.params;
+
+    console.log(contact);
 
     return (
         <View style={globalStyles.safeAreaContainer}>
@@ -33,19 +36,33 @@ export const ContactAdd = ({ route }: Props) => {
 
                 <Formik
                     initialValues={{
-                        fname: '',
-                        lname: '',
-                        email: '',
-                        cellphone: '',
-                        office: 0,
-                        origin: 0,
-                        status: false,
-                        notes: ''
+                        fname: contact ? contact.fname : '',
+                        lname: contact ? contact.lname : '',
+                        email: contact ? contact.email : '',
+                        cellphone: contact ? contact.cellphone : '',
+                        office: contact ? contact.office : 1,
+                        origin: contact ? contact.origin : 1,
+                        status: contact ? contact.status : false,
+                        notes: contact ? contact.notes : '',
                     }}
                     enableReinitialize={true}
                     onSubmit={(values) => {
-                        console.log(values)
-                        dispatch(startAddingContact(values))
+                        // console.log(values)
+
+                        contact ?
+                            dispatch(startUpdateContact({
+                                navigation,
+                                id: contact.id,
+                                ...values
+                            }))
+                            :
+                            dispatch(startAddingContact({
+                                navigation,
+                                ...values
+                            }))
+
+
+
                     }
                     }
                     validationSchema={
@@ -59,7 +76,7 @@ export const ContactAdd = ({ route }: Props) => {
                             email: yup.string()
                                 .required('Email requerido')
                                 .email('Email invalido'),
-                                cellphone: yup.string()
+                            cellphone: yup.string()
                                 .required('Telefono requerido')
                                 .matches(/^[0-9]{10}$/, 'Telefono invalido')
                                 .min(10, 'Telefono invalido'),
@@ -118,17 +135,17 @@ export const ContactAdd = ({ route }: Props) => {
                                 onValueChange={(itemValue, itemIndex) => setFieldValue('status', itemValue)}
                                 style={globalStyles.picker}
                             >
-                               
-                                        <Picker.Item label={'Activo'} value={true} />
-                                        <Picker.Item label={'Inactivo'} value={false} />
-                                  
+
+                                <Picker.Item label={'Activo'} value={true} />
+                                <Picker.Item label={'Inactivo'} value={false} />
+
                             </Picker>
-                            <Text>{errors.status && touched.status }</Text>
+                            <Text>{errors.status && touched.status}</Text>
 
 
                             <Text style={globalStyles.inputLabel}>Oficina</Text>
                             <Picker
-                                selectedValue={values.office}
+
                                 onValueChange={(itemValue, itemIndex) => setFieldValue('office', itemValue)}
                                 style={globalStyles.picker}
                             >
@@ -141,7 +158,7 @@ export const ContactAdd = ({ route }: Props) => {
 
                             <Text style={globalStyles.inputLabel}>Origen</Text>
                             <Picker
-                                selectedValue={values.origin}
+
                                 onValueChange={(itemValue, itemIndex) => setFieldValue('origin', itemValue)}
                                 style={globalStyles.picker}
                             >
@@ -151,7 +168,7 @@ export const ContactAdd = ({ route }: Props) => {
                                     ))
                                 }
                             </Picker>
-                           
+
                             <CustomInput
                                 bigger={true}
                                 touched={touched.notes}

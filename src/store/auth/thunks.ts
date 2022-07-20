@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Dispatch } from 'redux';
 import { remaxApi } from '../../api';
-import { AuthData } from '../../interfaces/authInterfaces';
+import { User } from '../../interfaces/authInterfaces';
 import { login, logout } from './authSlice';
 // import from 'axios'; 'axios';
 
@@ -14,11 +14,12 @@ type DataUser = {
 export const startLogin = (dataUser: DataUser) => {
     return async (dispatch: Dispatch) => {
         try {
-            const { data } = await remaxApi.post<AuthData>('/auth/login/', dataUser);
+            const { data } = await remaxApi.post<User>('/auth/login/', dataUser);
 
             dispatch(login(data));
             
             await AsyncStorage.setItem('token', data.token.access);
+            await AsyncStorage.setItem('email', data.email);
             // await AsyncStorage.setItem('token-refresh', data.token.refresh);
 
         } catch (error: any) {
@@ -32,25 +33,24 @@ export const checkToken = () => {
     return async (dispatch: Dispatch) => {
     const token = await AsyncStorage.getItem('token');
     const tokenRefresh = await AsyncStorage.getItem('token-refresh');
+    const email = await AsyncStorage.getItem('token-refresh')
         
     // No token, no autenticado
-    if ( !token || !tokenRefresh ) return dispatch(logout());
+    if ( !token || !tokenRefresh || !email ) return dispatch(logout());
 
     // Hay token
-    const resp = await remaxApi.post('/auth/login/refresh/',tokenRefresh);
+    const resp = await remaxApi.post('/auth/login/refresh/',{
+        refresh: tokenRefresh,
+        email
+    });
     if ( resp.status !== 200 ) {
         return dispatch(logout());
     }
     
     await AsyncStorage.setItem('token', resp.data.token.access); 
     await AsyncStorage.setItem('token-refresh', resp.data.token.refresh);
-    dispatch({ 
-        type: 'signUp',
-        payload: {
-            token: resp.data.token,
-            user: resp.data.usuario
-        }
-    });
+    await AsyncStorage.setItem('email', resp.data.email);
+    dispatch(login(resp.data));
     }
 }
 
