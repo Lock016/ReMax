@@ -13,7 +13,7 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigation = () => {
     return (
         <Drawer.Navigator
-            initialRouteName='ContactsStack'
+            initialRouteName='LocationsStack'
             screenOptions={{
                 headerShown: false, // Oculta la hamburguesa
                 unmountOnBlur: true, // Oculta el componente cuando se sale de la pantalla
@@ -21,9 +21,9 @@ const DrawerNavigation = () => {
             detachInactiveScreens={true}
             drawerContent={(props) => <DrawerComponent { ...props } />}
         >
+            <Drawer.Screen name='LocationsStack' options={{ title: 'Ubicaciones'}} component={LocationsStack} />
             <Drawer.Screen name='ContactsStack' options={{ title: 'Contactos'}} component={ContactsStack} />
             <Drawer.Screen name='PropertiesStack' options={{ title: 'Propiedades'}} component={PropertiesStack} />
-            <Drawer.Screen name='LocationsStack' options={{ title: 'Ubicaciones'}} component={LocationsStack} />
             <Drawer.Screen name='RemindersStack' options={{ title: 'Recordatorios'}} component={RemindersStack} />
             <Drawer.Screen name='LoginScreen' component={LoginScreen} />
         </Drawer.Navigator>

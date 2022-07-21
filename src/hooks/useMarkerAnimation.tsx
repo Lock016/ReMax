@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Animated, { interpolate } from 'react-native-reanimated';
+import Animated, { interpolate, makeMutable } from 'react-native-reanimated';
 import { useTiming } from 'react-native-redash';
 
 interface useMarkerAnimationProps {
@@ -16,11 +16,7 @@ export const useMarkerAnimation = ({ id, selectedMarker }: useMarkerAnimationPro
         setActive(isActive);
     }, [id, selectedMarker]);
 
-    const transition = useTiming(active, {
-        duration: 200,
-    });
-
-    const scale = interpolate(transition, [0, 1], [0, 1]);
+    const scale = interpolate(1, [0, 1], [0, 1]);
 
     return scale;
 }

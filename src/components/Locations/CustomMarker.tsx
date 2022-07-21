@@ -10,6 +10,7 @@ interface CustomMarkerProps {
     color: string;
     latitude: number;
     longitude: number;
+    children?: React.ReactNode;
 }
 
 export const CustomMarker = ({
@@ -18,6 +19,7 @@ export const CustomMarker = ({
     color,
     latitude,
     longitude,
+    children
 }: CustomMarkerProps) => {
     const scale = useMarkerAnimation({ id, selectedMarker });
 

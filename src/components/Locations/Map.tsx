@@ -21,7 +21,7 @@ export const Map = () => {
                 mapType="standard"
             >
                 {
-                    markers.map((marker, index) => (
+                    markers.map((marker) => (
                         <CustomMarker
                             key={marker.id}
                             id={marker.id}
@@ -29,7 +29,8 @@ export const Map = () => {
                             color={marker.color}
                             latitude={marker.latitude}
                             longitude={marker.longitude}
-                        />
+                        >
+                        </CustomMarker>
 
                     ))
                 }
