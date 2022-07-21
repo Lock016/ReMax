@@ -23,7 +23,6 @@ export const ContactAdd = ({ route, navigation }: Props) => {
     const { offices, origins } = useAppSelector(state => state.contacts)
     const { title, contact } = route.params;
 
-    console.log(contact);
 
     return (
         <View style={globalStyles.safeAreaContainer}>
@@ -47,8 +46,6 @@ export const ContactAdd = ({ route, navigation }: Props) => {
                     }}
                     enableReinitialize={true}
                     onSubmit={(values) => {
-                        // console.log(values)
-
                         contact ?
                             dispatch(startUpdateContact({
                                 navigation,
@@ -60,11 +57,7 @@ export const ContactAdd = ({ route, navigation }: Props) => {
                                 navigation,
                                 ...values
                             }))
-
-
-
-                    }
-                    }
+                    }}
                     validationSchema={
                         yup.object({
                             fname: yup.string()
@@ -145,7 +138,7 @@ export const ContactAdd = ({ route, navigation }: Props) => {
 
                             <Text style={globalStyles.inputLabel}>Oficina</Text>
                             <Picker
-
+                                selectedValue={values.office}
                                 onValueChange={(itemValue, itemIndex) => setFieldValue('office', itemValue)}
                                 style={globalStyles.picker}
                             >

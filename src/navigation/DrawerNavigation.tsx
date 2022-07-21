@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { LoginScreen } from '../screens/LoginScreen';
@@ -32,5 +31,3 @@ const DrawerNavigation = () => {
 };
 
 export default DrawerNavigation;
-
-const styles = StyleSheet.create({});

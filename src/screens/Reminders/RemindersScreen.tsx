@@ -1,22 +1,28 @@
-import { Button, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { globalStyles } from '../../theme/globalTheme'
-import React from 'react'
+import React, { useEffect, } from 'react'
+import { Platform, SafeAreaView, ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
 import { Header } from '../../components/ui/Header'
-import * as AddCalendarEvent from 'react-native-add-calendar-event';
+import { globalStyles } from '../../theme/globalTheme'
 import * as yup from 'yup'
 import { Formik } from 'formik';
 import { CustomInput } from '../../components/ui/CustomInput';
-import SwitchComponent from '../../components/SwitchComponent';
-import { useState } from 'react'
-import { CustomSwitch } from '../../components/CustomSwitch';
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import BlueButton from '../../components/BlueButton';
+import CustomSwitch from '../../components/CustomSwitch'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import { startGettingOffices, startGettingContacts } from '../../store/contacts'
+import { Picker } from '@react-native-picker/picker'
+
 
 const eventConfig: AddCalendarEvent.CreateOptions = {
-    title: "Evento de prueba jejeje", 
+
+    startDate: new Date().toISOString(),
+    endDate: new Date().toISOString(),
+    title: "Evento de prueba jejeje",
     location: 'Huizache 1 circuito chamula 615 Durango Mexico',
     notes: 'jfdsa;lkjffkljfklj;sdfjlkdsafjksdafdas'
-
 };
+
+
 
 const createCalendarEvent = async () => {
     const eventInfo = await AddCalendarEvent.presentEventCreatingDialog(eventConfig)
@@ -29,26 +35,13 @@ const createCalendarEvent = async () => {
 
 const RemindersScreen = () => {
 
-    const [isActive, setIsActive] = useState({
-        op1: true,
-        op2: false,
-        op3: false,
-    });
+    const dispatch = useAppDispatch();
 
-    const [isOn, setIsOn] = useState({
-        done: true,
-        currency: true,
-        accept: true,
-    });
-    
-    const { done, currency, accept } = isOn;
-    
-    const onChange = ( value: boolean, field: string ) => {
-        setIsOn({
-            ...isOn,
-            [field]: value
-        });
-    }
+    useEffect(() => {
+        dispatch(startGettingOffices())
+        dispatch(startGettingContacts())
+    }, [])
+    const { offices, contacts } = useAppSelector(state => state.contacts)
 
 
     return (
@@ -62,20 +55,21 @@ const RemindersScreen = () => {
 
                 <Formik
                     initialValues={{
-                        user: '',
+                        option: 'Recorrrido',
                         property: '',
                         date: '',
-                        comments: '',
-                        activityType: '',
-                        quantity: '',
-                        coin: '',
-                        agent: '',
-                        office: '',
                         notes: '',
-                        reminderDate: '',
+                        
+                        
                         type: '',
                         operation: '',
+
+                        quantity: '',
+                        currency: false,
+                        office: '',
+                        agent: '',
                         buyerAgent: '',
+                        accept: false,
                     }}
                     enableReinitialize={true}
                     onSubmit={
@@ -83,55 +77,40 @@ const RemindersScreen = () => {
                     }
                     validationSchema={
                         yup.object({
-                            // name: yup.string()
-                            //     .required('Nombre requerido')
-                            //     .max(30, 'Nombre muy largo'),
-                            // lname: yup.string()
-                            //     .required('Apellido requerido')
-                            //     .max(30, 'Apellido muy largo'),
-                            // email: yup.string()
-                            //     .required('Email requerido')
-                            //     .email('Email invalido'),
-                            // phone: yup.string()
-                            //     .required('Telefono requerido')
-                            //     .matches(/^[0-9]{10}$/, 'Telefono invalido')
-                            //     .min(10, 'Telefono invalido'),
-                            // office: yup.string()
-                            //     .required('Oficina requerida'),
-                            // origin: yup.string()
-                            //     .required('Origen requerida'),
-                            // agent: yup.string()
-                            //     .required('Agente requerido'),
-                            // state: yup.string()
-                            //     .required('Estado requerido'),
-                            // type: yup.string()
-                            //     .required('Tipo requerido'),
-                            // notes: yup.string()
-                            //     .required('Notas requeridas')
-
+                            property: yup.string().required('El inmueble es requerido'),
+                            date: yup.string().required('La fecha de recordatorio es requerida'),
+                            option: yup.string().required('El tipo de actividad es requerido'),
+                            notes: yup.string().required('Las notas son requeridas'),
+                            
+                            type: yup.string().required('El tipo es requerido'),
+                            operation: yup.string().required('La operación es requerida'),
+                            
+                            currency: yup.boolean().required('La moneda es requerida'),
+                            agent: yup.string().required('El agente es requerido'),
+                            office: yup.string().required('El oficina es requerida'),
+                            buyerAgent: yup.string().required('El agente es requerido'),
+                            quantity: yup.string().required('La cantidad es requerida'),
+                            accept: yup.boolean().required('El aceptación es requerida'),
                         })
                     }
 
                 >
-                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                    {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
                         <View style={globalStyles.formContainer}>
 
-                            <SwitchComponent
-                                setIsActive={setIsActive}
-                                isActive={isActive}
-                                op1={'Recorrido'}
-                                op2={'Llamadas'}
-                                op3={'Propuestas'}
+
+                            <CustomSwitch
+                                onValueChange={(value) => {
+                                    setFieldValue('option', value)
+                                }}
+                                value={values.option}
+                                options={[
+                                    "Recorrrido",
+                                    "LLamadas",
+                                    "Propuestas"
+                                ]}
                             />
-                            
-                            <CustomInput
-                                touched={touched.user}
-                                label="Usuario"
-                                errors={errors.user}
-                                onChangeText={handleChange('user')}
-                                onBlur={handleBlur('user')}
-                                value={values.user}
-                            />
+
                             <CustomInput
                                 touched={touched.property}
                                 label="Propiedad"
@@ -140,67 +119,48 @@ const RemindersScreen = () => {
                                 onBlur={handleBlur('property')}
                                 value={values.property}
                             />
-                            <CustomInput
-                                touched={touched.date}
-                                label="Fecha"
-                                errors={errors.date}
-                                onChangeText={handleChange('date')}
-                                onBlur={handleBlur('date')}
-                                value={values.date}
-                            />
+
                             {
-                                isActive.op1 &&
+                                values.option === 'Recorrrido' &&
                                 <>
-                                
+
                                     <Text style={styles.blueText}>Recorridos</Text>
                                     <CustomInput
-                                        touched={touched.reminderDate}
+                                        touched={touched.date}
                                         label="Fecha de recorrido"
-                                        errors={errors.reminderDate}
-                                        onChangeText={handleChange('reminderDate')}
-                                        onBlur={handleBlur('reminderDate')}
-                                        value={values.reminderDate}
+                                        errors={errors.date}
+                                        onChangeText={handleChange('date')}
+                                        onBlur={handleBlur('date')}
+                                        value={values.date}
                                     />
                                     <CustomInput
-                                        touched={touched.comments}
+                                        touched={touched.notes}
                                         label="Comentarios"
-                                        errors={errors.comments}
-                                        onChangeText={handleChange('comments')}
-                                        onBlur={handleBlur('comments')}
-                                        value={values.comments}
+                                        errors={errors.notes}
+                                        onChangeText={handleChange('notes')}
+                                        onBlur={handleBlur('notes')}
+                                        value={values.notes}
                                         bigger={true}
                                         numberOfLines={5}
                                         multiline
                                     />
-                                    <View style={{
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                    }}>
-                                        <Text style={globalStyles.inputLabel}>Realizado</Text>
-                                        <View style={{ top: -2 }}>
-                                            <CustomSwitch
-                                                isOn={done}
-                                                onChange={ (value) => onChange(value, 'done') }
-                                            />
 
-                                        </View>
-                                    </View>
                                 </>
 
                             }
                             {
-                                isActive.op2 &&
+                                values.option === 'LLamadas' &&
                                 <>
-                                
+
                                     <Text style={styles.blueText}>Llamadas</Text>
                                     <CustomInput
-                                        touched={touched.reminderDate}
+                                        touched={touched.date}
                                         label="Fecha de recorrido"
-                                        errors={errors.reminderDate}
-                                        onChangeText={handleChange('reminderDate')}
-                                        onBlur={handleBlur('reminderDate')}
-                                        value={values.reminderDate}
-                                    /> 
+                                        errors={errors.date}
+                                        onChangeText={handleChange('date')}
+                                        onBlur={handleBlur('date')}
+                                        value={values.date}
+                                    />
                                     <CustomInput
                                         touched={touched.type}
                                         label="Tipo"
@@ -208,7 +168,7 @@ const RemindersScreen = () => {
                                         onChangeText={handleChange('type')}
                                         onBlur={handleBlur('type')}
                                         value={values.type}
-                                    /> 
+                                    />
                                     <CustomInput
                                         touched={touched.operation}
                                         label="Operación"
@@ -216,14 +176,14 @@ const RemindersScreen = () => {
                                         onChangeText={handleChange('operation')}
                                         onBlur={handleBlur('operation')}
                                         value={values.operation}
-                                    /> 
+                                    />
                                     <CustomInput
-                                        touched={touched.comments}
+                                        touched={touched.notes}
                                         label="Comentarios"
-                                        errors={errors.comments}
-                                        onChangeText={handleChange('comments')}
-                                        onBlur={handleBlur('comments')}
-                                        value={values.comments}
+                                        errors={errors.notes}
+                                        onChangeText={handleChange('notes')}
+                                        onBlur={handleBlur('notes')}
+                                        value={values.notes}
                                         bigger={true}
                                         numberOfLines={5}
                                         multiline
@@ -231,18 +191,19 @@ const RemindersScreen = () => {
                                 </>
                             }
                             {
-                                isActive.op3 &&
+                                values.option === 'Propuestas' &&
                                 <>
-                                
+
                                     <Text style={styles.blueText}>Propuestas</Text>
                                     <CustomInput
-                                        touched={touched.reminderDate}
+                                        touched={touched.date}
                                         label="Fecha de propuesta"
-                                        errors={errors.reminderDate}
-                                        onChangeText={handleChange('reminderDate')}
-                                        onBlur={handleBlur('reminderDate')}
-                                        value={values.reminderDate}
+                                        errors={errors.date}
+                                        onChangeText={handleChange('date')}
+                                        onBlur={handleBlur('date')}
+                                        value={values.date}
                                     />
+                                 
                                     <CustomInput
                                         touched={touched.quantity}
                                         label="Cantidad"
@@ -250,14 +211,7 @@ const RemindersScreen = () => {
                                         onChangeText={handleChange('quantity')}
                                         onBlur={handleBlur('quantity')}
                                         value={values.quantity}
-                                    />
-                                    <CustomInput
-                                        touched={touched.quantity}
-                                        label="Cantidad"
-                                        errors={errors.quantity}
-                                        onChangeText={handleChange('quantity')}
-                                        onBlur={handleBlur('quantity')}
-                                        value={values.quantity}
+                                        keyboardType='numeric'
                                     />
                                     <View style={{
                                         flexDirection: 'row',
@@ -269,45 +223,66 @@ const RemindersScreen = () => {
                                                 top: -2
                                             }}
                                         >
-                                            <CustomSwitch
-                                                isOn={currency}
-                                                onChange={ (value) => onChange(value, 'currency') }
+                                            <Switch
+                                                trackColor={{ false: "#D9D9DB", true: "#003DA5" }}
+                                                thumbColor={(Platform.OS === 'android') ? '#003DA5' : ''}
+                                                onValueChange={(value) => setFieldValue('currency', value)}
+                                                value={values.currency}
                                             />
 
                                         </View>
                                         <Text style={globalStyles.inputLabel}>MXN</Text>
                                     </View>
+
+                                    <Text style={globalStyles.inputLabel}>Agente Opcionador</Text>
+                                    <Picker
+                                        selectedValue={values.agent}
+                                        onValueChange={(itemValue, itemIndex) => setFieldValue('agent', itemValue)}
+                                        style={globalStyles.picker}
+                                    >
+                                        {
+                                            contacts.map(contact => (
+                                                <Picker.Item key={contact.id} label={`${contact.fname} ${contact.lname}` } value={`${contact.fname} ${contact.lname}`} />
+                                            ))
+                                        }
+                                    </Picker>
+
+
+                                    <Text style={globalStyles.inputLabel}>Oficina</Text>
+                                    <Picker
+                                        selectedValue={values.office}
+                                        onValueChange={(itemValue, itemIndex) => setFieldValue('office', itemValue)}
+                                        style={globalStyles.picker}
+                                    >
+                                        {
+                                            offices.map(office => (
+                                                <Picker.Item key={office.id} label={office.name} value={office.name} />
+                                            ))
+                                        }
+                                    </Picker>
+                                    
+
+                                    <Text style={globalStyles.inputLabel}>Agente Comprador</Text>
+                                    <Picker
+                                        selectedValue={values.buyerAgent}
+                                        onValueChange={(itemValue, itemIndex) => setFieldValue('buyerAgent', itemValue)}
+                                        style={globalStyles.picker}
+                                    >
+                                        {
+                                            contacts.map(contact => (
+                                                <Picker.Item key={contact.id} label={`${contact.fname} ${contact.lname}`} value={`${contact.fname} ${contact.lname}`} />
+                                            ))
+                                        }
+                                    </Picker>
+
+                                 
                                     <CustomInput
-                                        touched={touched.agent}
-                                        label="Agente opcionador"
-                                        errors={errors.agent}
-                                        onChangeText={handleChange('agent')}
-                                        onBlur={handleBlur('agent')}
-                                        value={values.agent}
-                                    />
-                                    <CustomInput
-                                        touched={touched.office}
-                                        label="Oficina comprador"
-                                        errors={errors.office}
-                                        onChangeText={handleChange('office')}
-                                        onBlur={handleBlur('office')}
-                                        value={values.office}
-                                    />
-                                    <CustomInput
-                                        touched={touched.buyerAgent}
-                                        label="Agente Comprador"
-                                        errors={errors.buyerAgent}
-                                        onChangeText={handleChange('buyerAgent')}
-                                        onBlur={handleBlur('buyerAgent')}
-                                        value={values.buyerAgent}
-                                    />
-                                    <CustomInput
-                                        touched={touched.comments}
+                                        touched={touched.notes}
                                         label="Comentarios"
-                                        errors={errors.comments}
-                                        onChangeText={handleChange('comments')}
-                                        onBlur={handleBlur('comments')}
-                                        value={values.comments}
+                                        errors={errors.notes}
+                                        onChangeText={handleChange('notes')}
+                                        onBlur={handleBlur('notes')}
+                                        value={values.notes}
                                         bigger={true}
                                         numberOfLines={5}
                                         multiline
@@ -318,9 +293,11 @@ const RemindersScreen = () => {
                                     }}>
                                         <Text style={globalStyles.inputLabel}>Realizado</Text>
                                         <View style={{ top: -2 }}>
-                                            <CustomSwitch
-                                                isOn={accept}
-                                                onChange={ (value) => onChange(value, 'accept') }
+                                            <Switch
+                                                trackColor={{ false: "#D9D9DB", true: "#003DA5" }}
+                                                thumbColor={(Platform.OS === 'android') ? '#003DA5' : ''}
+                                                onValueChange={(value) => setFieldValue('accept', value)}
+                                                value={values.accept}
                                             />
                                         </View>
                                     </View>

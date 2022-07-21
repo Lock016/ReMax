@@ -1,19 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Property } from '../../interfaces/propertiesInterface';
 
-export interface Property {
-    id: string,
-    name: string,
-    location: string,
-    price: string,
-    images: string [],
-    description: string,
-    type: string,
-    bedrooms: string,
-    size: string,
-    bathrooms: string,
-    garages: string,
-    areas: string,
-}
+
 
 interface PropertiesState {
     properties: Property[];
@@ -22,7 +10,7 @@ interface PropertiesState {
 }
 
 const initialState: PropertiesState = {
-    properties: [] as Property[],
+    properties: [],
     loading: true,
     activeProperty: null,
 };

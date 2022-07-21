@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View, FlatList } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Header } from '../../components/ui/Header'
 import { globalStyles } from '../../theme/globalTheme'
 import PropertiesCard from '../../components/Properties/PropertiesCard'
-import { propertiesInterface } from '../../interfaces/propertiesInterface'
-import { data } from '../../data/propertiesExample'
+
 import { useAppSelector } from '../../hooks';
 import { ActivityLoader } from '../../components/ui/ActivityLoader'
 
@@ -28,13 +27,13 @@ const PropertiesResults = () => {
                     :
                     <FlatList
                         data={properties}
-                        keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item) => item.data.id.toString()}
                         renderItem={({ item }) => <PropertiesCard 
-                            id={item.id}
-                            title={item.name}
-                            price={item.price}
-                            image={item.images[0]}
-                            type={item.type}
+                            id={item.data.id}
+                            title={item.data.address}
+                            price={item.data.price}
+                            image={item.images}
+                            type={item.data.type}
                             item={item}
                         />}
                         showsVerticalScrollIndicator={false}
