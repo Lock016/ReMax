@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, FlatList } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Image, FlatList, Share } from 'react-native'
 import { globalStyles } from '../../theme/globalTheme'
 import { Header } from '../../components/ui/Header';  
 import { useAppSelector, useAppDispatch } from '../../hooks';
@@ -6,14 +6,28 @@ import { Property } from '../../interfaces/propertiesInterface';
 
 import React from 'react'
 import { numberWithCommas } from '../../helpers/NumberWithCommas';
+import BlueButton from '../../components/BlueButton';
 
 const PropertyDetail = () => {
 
     const { activeProperty } = useAppSelector(state => state.properties)
 
-    const {address, images, price, description, areas, bathrooms, bedrooms, type, typeOfService, size } = activeProperty as Property;
+    const {address, images, price, description, areas, bathrooms, bedrooms, type, parking_lots, typeOfService, size, link } = activeProperty as Property;
 
     const areasArray = areas.split(',');
+
+    const onShare = async () => {
+        try{
+            const result = await Share.share({
+                message: link,
+                title: 'Comparte esta propiedad',
+                url: link
+            })
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
 
     return(
         <SafeAreaView style={ globalStyles.safeAreaContainer}>
@@ -44,8 +58,6 @@ const PropertyDetail = () => {
 
                 <Text style={ styles.detailsTitles}>Descripción</Text>
                 <Text style={ styles.detailsTexts }>{description}</Text>
-                {/* <Text style={ styles.detailsTitles}>Detalles</Text>
-                <Text style={ styles.detailsTexts }>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, sequi dolorem nisi nobis labore asperiores aspernatur magnam dolore harum, ipsa sit animi sapiente cumque eveniet, voluptate consectetur pariatur incidunt modi!</Text> */}
                 {
                     areas !== 'null' &&
                     <>
@@ -68,9 +80,27 @@ const PropertyDetail = () => {
                     bathrooms !== 0 &&
                     <>
                         <Text style={ styles.detailsTitles}>Baños</Text>
-                        <Text style={{ ...styles.detailsTexts, marginBottom: 15 }}>{bathrooms}</Text>
+                        <Text style={{ ...styles.detailsTexts }}>{bathrooms}</Text>
                     </>
                 }
+                {
+                    parking_lots !== 0 &&
+                    <>
+                        <Text style={ styles.detailsTitles}>Estacionamientos</Text>
+                        <Text style={{ ...styles.detailsTexts, marginBottom: 15 }}>{parking_lots}</Text>
+                    </>
+                }
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginBottom: 15
+                }}>
+                    <BlueButton
+                        text='Compartir'
+                        onPress={onShare}
+                    />
+                </View>
+
 
             </ScrollView>
         </SafeAreaView>

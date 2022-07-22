@@ -14,6 +14,7 @@ export interface Property {
     areas: string;
     images: Image[];
     office: number;
+    link: string;
 }
 
 

@@ -14,7 +14,7 @@ import BlueButton from '../../components/BlueButton';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAppSelector, useAppDispatch } from '../../hooks';
-import { startGettingProperties } from '../../store/properties';
+import { startFilteringProperties, startGettingProperties } from '../../store/properties';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface Nav extends StackNavigationProp<any, any> { }
@@ -32,10 +32,7 @@ export const PropertiesScreen = () => {
         op3: false,
     });
 
-    const [selectedValue, setSelectedValue] = useState();
-    const [selectedRooms, setSelectedRooms] = useState();
-    const [selectedBathrooms, setSelectedBathrooms] = useState();
-    const [selectedParking, setSelectedParking] = useState();
+    const [selectedValue, setSelectedValue] = useState('Casa');
 
     return (
         <SafeAreaView style={globalStyles.safeAreaContainer} >
@@ -45,7 +42,6 @@ export const PropertiesScreen = () => {
                 <Formik
                     initialValues={{
                         propertyType: '',
-                        propertyName: '',
                         location: '',
                         fromPrice: '',
                         toPrice: '',
@@ -55,8 +51,8 @@ export const PropertiesScreen = () => {
                         bathrooms: '',
                         parking: '',
                     }}
-                    onSubmit={ () => {
-                        dispatch(startGettingProperties());
+                    onSubmit={ (values) => {
+                        dispatch(startFilteringProperties(values));
                         navigate.navigate('PropertiesResults');
                     }}
                 >
@@ -72,8 +68,8 @@ export const PropertiesScreen = () => {
                                 op3={'Industrial'}
                             />
                             <Picker
-                                selectedValue={selectedValue}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                selectedValue={values.propertyType}
+                                onValueChange={(itemValue, itemIndex) => setFieldValue('propertyType', itemValue)}
                                 style={globalStyles.picker}
                             >
                                 {isActive.op1 ? residencialItems.map((item, index) => {
@@ -94,15 +90,6 @@ export const PropertiesScreen = () => {
                                 onBlur={handleBlur('location')}
                                 value={values.location}
                             />
-                            {/* <CustomInput
-                                touched={touched.price}
-                                label="Precio"
-                                errors={errors.price}
-                                onChangeText={handleChange('price')}
-                                onBlur={handleBlur('price')}
-                                value={values.price}
-                                keyboardType="numeric"
-                            /> */}
                             <Text style={globalStyles.inputLabel}>Precio</Text>
                             <View style={{
                                 flexDirection: 'row',
@@ -154,59 +141,45 @@ export const PropertiesScreen = () => {
                             </View>
                             <Text style={globalStyles.inputLabel}>Habitaciones</Text>
                             <Picker
-                                selectedValue={selectedRooms}
-                                onValueChange={(itemValue, itemIndex) => setSelectedRooms(itemValue)}
+                                selectedValue={values.rooms}
+                                onValueChange={(itemValue, itemIndex) => setFieldValue('rooms', itemValue)}
                                 style={globalStyles.picker}
                             >
-                                <Picker.Item label="1" value="1" />
-                                <Picker.Item label="2" value="2" />
-                                <Picker.Item label="3" value="3" />
-                                <Picker.Item label="4" value="4" />
-                                <Picker.Item label="5+" value="5+" />
+                                <Picker.Item label="0" value={0} />
+                                <Picker.Item label="1" value={1} />
+                                <Picker.Item label="2" value={2} />
+                                <Picker.Item label="3" value={3} />
+                                <Picker.Item label="4" value={4} />
+                                <Picker.Item label="5" value={5} />
                             </Picker>
                             <Text style={globalStyles.inputLabel}>Baños</Text>
                             <Picker
-                                selectedValue={selectedBathrooms}
-                                onValueChange={(itemValue, itemIndex) => setSelectedBathrooms(itemValue)}
+                                selectedValue={values.bathrooms}
+                                onValueChange={(itemValue, itemIndex) => setFieldValue('bathrooms', itemValue)}
                                 style={globalStyles.picker}
                             >
-                                <Picker.Item label="1" value="1" />
-                                <Picker.Item label="1.5" value="1.5" />
-                                <Picker.Item label="2" value="2" />
-                                <Picker.Item label="2.5" value="2.5" />
-                                <Picker.Item label="3" value="3" />
-                                <Picker.Item label="3.5" value="3.5" />
-                                <Picker.Item label="4+" value="4+" />
+                                <Picker.Item label="0" value={0} />
+                                <Picker.Item label="0.5" value={0.5} />
+                                <Picker.Item label="1" value={1} />
+                                <Picker.Item label="1.5" value={1.5} />
+                                <Picker.Item label="2" value={2} />
+                                <Picker.Item label="2.5" value={2.5} />
+                                <Picker.Item label="3" value={3} />
                             </Picker>
                             <Text style={globalStyles.inputLabel}>Estacionamientos</Text>
                             <Picker
-                                selectedValue={selectedParking}
-                                onValueChange={(itemValue, itemIndex) => setSelectedParking(itemValue)}
+                                selectedValue={values.parking}
+                                onValueChange={(itemValue, itemIndex) => setFieldValue('parking', itemValue)}
                                 style={globalStyles.picker}
                             >
-                                <Picker.Item label="1" value="1" />
-                                <Picker.Item label="2" value="2" />
-                                <Picker.Item label="3" value="3" />
-                                <Picker.Item label="4" value="4" />
+                                <Picker.Item label="0" value={0} />
+                                <Picker.Item label="1" value={1} />
+                                <Picker.Item label="2" value={2} />
+                                <Picker.Item label="3" value={3} />
+                                <Picker.Item label="4" value={4} />
+                                <Picker.Item label="5" value={5} />
+                                <Picker.Item label="6" value={6} />
                             </Picker>
-                            {/* <View style={ styles.cardContainer}>
-                                <View style={ styles.imageContainer}>
-                                    <Image
-                                        source={{ uri: 'https://media.istockphoto.com/vectors/vector-illustration-of-red-house-icon-vector-id155666671?k=20&m=155666671&s=612x612&w=0&h=sL5gRpVmrGcZBVu5jEjF5Ne7A4ZrBCuh5d6DpRv3mps=' }}
-                                        style={ styles.image }
-                                    />
-                                </View>
-                                <View style={ styles.infoContainer}>
-                                    <Text style= { styles.propertyTitle}>Pelícano 424 Real del Mezquital</Text>
-                                    <Text style= { styles.propertyPrice}>$1,000,000</Text>
-                                    <Text style= { styles.propertyType}>Casa</Text>
-                                </View>
-                                <Icon
-                                    name='arrow-forward-ios'
-                                    color={'#003DA5'}
-                                    size={30}
-                                />
-                            </View> */}
                             <View
                                 style={{
                                     marginBottom: 10,

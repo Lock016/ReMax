@@ -25,6 +25,7 @@ const PropertiesResults = () => {
                     loading ?
                     <ActivityLoader/>
                     :
+                    properties.length > 0 ?
                     <FlatList
                         data={properties}
                         keyExtractor={(item) => item.id.toString()}
@@ -33,6 +34,15 @@ const PropertiesResults = () => {
                         />}
                         showsVerticalScrollIndicator={false}
                     />
+                    :
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Text style={{ ...globalStyles.title, paddingHorizontal: 20, textAlign: 'center'}}>No hay resultados</Text> 
+                    </View>
                 }
             </View>
 
