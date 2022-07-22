@@ -27,14 +27,9 @@ const PropertiesResults = () => {
                     :
                     <FlatList
                         data={properties}
-                        keyExtractor={(item) => item.data.id.toString()}
+                        keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => <PropertiesCard 
-                            id={item.data.id}
-                            title={item.data.address}
-                            price={item.data.price}
-                            image={item.images}
-                            type={item.data.type}
-                            item={item}
+                            property={item}
                         />}
                         showsVerticalScrollIndicator={false}
                     />

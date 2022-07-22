@@ -56,9 +56,8 @@ export const PropertiesScreen = () => {
                         parking: '',
                     }}
                     onSubmit={ () => {
-                       
                         dispatch(startGettingProperties());
-                         navigate.navigate('PropertiesResults');
+                        navigate.navigate('PropertiesResults');
                     }}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
