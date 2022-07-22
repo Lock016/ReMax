@@ -1,6 +1,3 @@
-
-
-
 export interface Property {
     id: number;
     address: string;

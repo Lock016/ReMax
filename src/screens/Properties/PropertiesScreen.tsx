@@ -1,12 +1,12 @@
-import { Button, StyleSheet, Text, View, SafeAreaView, TouchableOpacity,ScrollView, Image } from 'react-native'
+import { Button, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView, Image } from 'react-native'
 import { globalStyles } from '../../theme/globalTheme'
-import { Header } from '../../components/ui/Header';  
+import { Header } from '../../components/ui/Header';
 import { Picker } from '@react-native-picker/picker';
 // import InputComponent from '../../components/InputComponent';   
 import * as yup from 'yup'
 import { Formik } from 'formik'
-import SwitchComponent from '../../components/SwitchComponent'; 
-import { residencialItems, commercialItems, industrialItems } from '../../data/propertiesArrays';    
+import SwitchComponent from '../../components/SwitchComponent';
+import { residencialItems, commercialItems, industrialItems } from '../../data/propertiesArrays';
 import { CustomInput } from '../../components/ui/CustomInput';
 import { SmallCustomInput } from '../../components/ui/SmallCustomInput';
 import React, { useState } from 'react'
@@ -37,11 +37,11 @@ export const PropertiesScreen = () => {
     const [selectedBathrooms, setSelectedBathrooms] = useState();
     const [selectedParking, setSelectedParking] = useState();
 
-    return(
+    return (
         <SafeAreaView style={globalStyles.safeAreaContainer} >
-            <Header/>
-            <ScrollView style={{...globalStyles.container, paddingHorizontal: 0}} showsVerticalScrollIndicator={false}>
-                <Text style={{ ...globalStyles.title, paddingHorizontal: 20}}>Propiedades</Text>
+            <Header />
+            <ScrollView style={{ ...globalStyles.container, paddingHorizontal: 0 }} showsVerticalScrollIndicator={false}>
+                <Text style={{ ...globalStyles.title, paddingHorizontal: 20 }}>Propiedades</Text>
                 <Formik
                     initialValues={{
                         propertyType: '',
@@ -63,7 +63,7 @@ export const PropertiesScreen = () => {
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
                         <View style={globalStyles.formContainer}>
                             <Text style={globalStyles.inputLabel}>Tipo de Inmueble</Text>
-            
+
                             <SwitchComponent
                                 setIsActive={setIsActive}
                                 isActive={isActive}
@@ -210,7 +210,7 @@ export const PropertiesScreen = () => {
                             <View
                                 style={{
                                     marginBottom: 10,
-                                    alignItems: 'center',    
+                                    alignItems: 'center',
                                 }}
                             >
                                 <BlueButton
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
 
-    }, 
+    },
     propertyPrice: {
         fontSize: 12,
         color: '#656565',

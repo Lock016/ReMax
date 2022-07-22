@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import Animated from 'react-native-reanimated';
 import { useMarkerAnimation } from '../../hooks/useMarkerAnimation';
@@ -29,6 +29,7 @@ export const CustomMarker = ({
                 latitude: latitude,
                 longitude: longitude,
             }}
+            description={"Johan es caca"}
         >
             <View style={styles.markerWrapper}>
                 <Animated.View
@@ -39,7 +40,9 @@ export const CustomMarker = ({
                             transform: [{ scale: scale }],
                         },
                     ]}
-                ></Animated.View>
+                >
+                    <Image style={styles.image} source={require('../../assets/images/ReMax_Balloon.png')} />
+                </Animated.View>
             </View>
         </Marker>
     );
@@ -53,10 +56,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     marker: {
-        height: 22,
-        width: 22,
-        borderRadius: 20,
-        borderColor: 'white',
-        borderWidth: 2,
+        height: 40,
+        width: 40,
+        borderRadius: 10,
     },
+    image: {
+        resizeMode: 'contain',
+        width: 40,
+        height: 40
+    },
+
 });

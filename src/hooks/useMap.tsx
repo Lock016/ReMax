@@ -1,5 +1,5 @@
 //useMap.js
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, LegacyRef } from 'react';
 import MapView from 'react-native-maps';
 
 const DEVIATION = 0.0002;
@@ -9,13 +9,14 @@ export const useMap = () => {
     const [selectedMarker, setSelectedMarker] = useState(null);
 
     const handleNavigateToPoint = useCallback(
-        (id, lat, long) => {
+        (item) => {
+            const { id, latitude, longitude, color } = item;
             if (mapRef) {
                 mapRef.current?.animateCamera(
                     {
                         center: {
-                            latitude: lat - DEVIATION,
-                            longitude: long,
+                            latitude: latitude - DEVIATION,
+                            longitude: longitude,
                         },
                         zoom: 18.5,
                     },
@@ -27,7 +28,7 @@ export const useMap = () => {
         [mapRef, setSelectedMarker]
     );
 
-    const handelResetInitialPosition = useCallback(() => {
+    const handleResetInitialPosition = useCallback(() => {
         if (mapRef) {
             mapRef.current?.animateToRegion(
                 {
@@ -46,6 +47,6 @@ export const useMap = () => {
         mapRef,
         selectedMarker,
         handleNavigateToPoint,
-        handelResetInitialPosition,
+        handleResetInitialPosition,
     };
 }
