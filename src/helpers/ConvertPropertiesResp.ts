@@ -1,5 +1,6 @@
 import { Property } from "../interfaces/propertiesInterface";
 
+
 export const convertPropertiesResp = (data: any) => {
     let counter = 1;
     const properties: any = [];
@@ -7,11 +8,10 @@ export const convertPropertiesResp = (data: any) => {
     Object.keys(data).forEach((key: any) => {
 
         Object.keys(data[key]).forEach((property: any) => {
-            
+
             if (counter === 1) {
                 properties.push({
                     id: data[key][property].id,
-
                     address: data[key][property].address,
                     price: data[key][property].price,
                     description: data[key][property].description,
@@ -25,8 +25,6 @@ export const convertPropertiesResp = (data: any) => {
                     parking_lots: data[key][property].parking_lots,
                     lt: data[key][property].lt,
                     ln: data[key][property].ln,
-                      
-
                 });
                 counter += 1;
             } else {

@@ -22,6 +22,7 @@ export interface Data {
     office:        number;
 }
 
+
 export interface Image {
     id:           number;
     propertie_id: number;
