@@ -39,7 +39,7 @@ export const CardContact = ({ contact }: Props) => {
 
       <TouchableOpacity style={styles.cardContainer}
         activeOpacity={.9}
-        onPress={() => navigation.navigate('ContactDetails')}
+        // onPress={() => navigation.navigate('ContactDetails')}
       >
         <View style={styles.textContainer} >
           <Text style={styles.nameText}>{`${contact.fname} ${contact.lname}` }</Text>

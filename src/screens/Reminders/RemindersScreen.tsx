@@ -1,5 +1,5 @@
-import React, { useEffect, } from 'react'
-import { Platform, SafeAreaView, ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
+import React, { useEffect, useState, } from 'react'
+import { Button, Platform, SafeAreaView, ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
 import { Header } from '../../components/ui/Header'
 import { globalStyles } from '../../theme/globalTheme'
 import * as yup from 'yup'
@@ -12,6 +12,9 @@ import { useAppDispatch, useAppSelector } from '../../hooks'
 import { startGettingOffices, startGettingContacts } from '../../store/contacts'
 import { Picker } from '@react-native-picker/picker'
 import { startGettingProperties } from '../../store/properties'
+import DatePicker from 'react-native-date-picker'
+import moment from 'moment'
+
 
 
 const eventConfig: AddCalendarEvent.CreateOptions = {
@@ -25,11 +28,16 @@ const eventConfig: AddCalendarEvent.CreateOptions = {
 
 
 
-const createCalendarEvent = async () => {
+const createCalendarEvent = async (
+    eventConfig: AddCalendarEvent.CreateOptions
+) => {
     const eventInfo = await AddCalendarEvent.presentEventCreatingDialog(eventConfig)
 
-    console.log(eventInfo)
+
+
 }
+
+
 
 
 
@@ -43,9 +51,9 @@ const RemindersScreen = () => {
         dispatch(startGettingContacts())
         dispatch(startGettingProperties())
     }, [])
-    const { offices, contacts } = useAppSelector(state => state.contacts)
 
     const { properties } = useAppSelector(state => state.properties)
+
 
 
     return (
@@ -59,42 +67,94 @@ const RemindersScreen = () => {
 
                 <Formik
                     initialValues={{
-                        option: 'Recorrrido',
+                        option: "Recorrrido",
                         property: '',
-                        date: '',
+                        date: new Date(),
                         notes: '',
 
 
-                        type: '',
-                        operation: '',
+                        type: 'Aclaración',
+                        operation: 'Venta',
 
                         quantity: '',
                         currency: false,
-                        office: '',
-                        agent: '',
-                        buyerAgent: '',
                         accept: false,
                     }}
                     enableReinitialize={true}
                     onSubmit={
-                        createCalendarEvent
+                        (values, { resetForm }) => {
+                            // console.log(values)
+                            if (values.option === 'Recorrrido') {
+                                createCalendarEvent({
+                                    title: 'Recorrrido',
+                                    startDate: values.date.toISOString(),
+                                    location: values.property,
+                                    notes: values.notes,
+
+                                })
+                            }
+                            if (values.option === 'Llamadas') {
+                                createCalendarEvent({
+                                    title: 'Llamada',
+                                    startDate: values.date.toISOString(),
+                                    // startDate: moment(values.date).subtract(1, 'day').format('YYYY-MM-DD'),
+                                    location: values.property,
+                                    notes: `Tipo: ${values.type}\nOperacion: ${values.operation}\nNotas: ${values.notes}`
+
+                                })
+                            }
+                            if (values.option === 'Propuestas') {
+                                createCalendarEvent({
+                                    title: 'Propuesta',
+                                    startDate: values.date.toISOString(),
+                                    location: values.property,
+                                    notes: `Cantidad: ${values.quantity}\nMondeda: ${values.currency ? 'MXN' :'USD'}\nAcepta: ${values.accept ? 'Si' : 'No'}\nNotas: ${values.notes}`
+
+                                })
+                            }
+
+
+                            resetForm();
+                        }
                     }
+
+
                     validationSchema={
                         yup.object({
                             property: yup.string().required('El inmueble es requerido'),
-                            date: yup.string().required('La fecha de recordatorio es requerida'),
-                            option: yup.string().required('El tipo de actividad es requerido'),
+                            date: yup.date().required('La fecha es requerida'),
+                            option: yup.string(),
                             notes: yup.string().required('Las notas son requeridas'),
 
-                            type: yup.string().required('El tipo es requerido'),
-                            operation: yup.string().required('La operación es requerida'),
+                            type: yup.string().when('option', {
+                                is: 'Llamadas',
+                                then: yup.string().required('El tipo de llamada es requerido'),
+                                otherwise: yup.string()
+                            }),
 
-                            currency: yup.boolean().required('La moneda es requerida'),
-                            agent: yup.string().required('El agente es requerido'),
-                            office: yup.string().required('El oficina es requerida'),
-                            buyerAgent: yup.string().required('El agente es requerido'),
-                            quantity: yup.string().required('La cantidad es requerida'),
-                            accept: yup.boolean().required('El aceptación es requerida'),
+                            operation: yup.string().when('option', {
+                                is: 'Llamadas',
+                                then: yup.string().required('La operación es requerida'),
+                                otherwise: yup.string(),
+                            }),
+
+                            currency: yup.boolean().when('option', {
+                                is: 'Propuestas',
+                                then: yup.boolean().required('La moneda es requerida'),
+                                otherwise: yup.boolean(),
+                            }),
+
+                            quantity: yup.string().when('option', {
+                                is: 'Propuestas',
+                                then: yup.string().required('La cantidad es requerida'),
+                                otherwise: yup.string(),
+                            }),
+                            accept: yup.boolean().when('option', {
+                                is: 'Propuestas',
+                                then: yup.boolean().required('El estado de la propuesta es requerido'),
+                                otherwise: yup.boolean(),
+                            }),
+
                         })
                     }
 
@@ -110,12 +170,13 @@ const RemindersScreen = () => {
                                 value={values.option}
                                 options={[
                                     "Recorrrido",
-                                    "LLamadas",
+                                    "Llamadas",
                                     "Propuestas"
                                 ]}
                             />
                             <Text style={globalStyles.inputLabel}>Propiedad</Text>
                             <Picker
+
                                 selectedValue={values.property}
                                 onValueChange={(itemValue, itemIndex) => setFieldValue('property', itemValue)}
                                 style={globalStyles.picker}
@@ -132,14 +193,20 @@ const RemindersScreen = () => {
                                 <>
 
                                     <Text style={styles.blueText}>Recorridos</Text>
-                                    <CustomInput
-                                        touched={touched.date}
-                                        label="Fecha de recorrido"
-                                        errors={errors.date}
-                                        onChangeText={handleChange('date')}
-                                        onBlur={handleBlur('date')}
-                                        value={values.date}
+                                    <Text style={globalStyles.inputLabel}>Fecha de recorrido</Text>
+
+
+                                    <DatePicker
+                                        date={values.date}
+                                        onDateChange={(date) => setFieldValue('date', date)}
+                                        style={{
+                                            marginBottom: 20,
+                                        }}
+                                        locale="es-MX"
+                                        mode="date"
                                     />
+
+
                                     <CustomInput
                                         touched={touched.notes}
                                         label="Comentarios"
@@ -156,34 +223,35 @@ const RemindersScreen = () => {
 
                             }
                             {
-                                values.option === 'LLamadas' &&
+                                values.option === 'Llamadas' &&
                                 <>
 
                                     <Text style={styles.blueText}>Llamadas</Text>
-                                    <CustomInput
-                                        touched={touched.date}
-                                        label="Fecha de recorrido"
-                                        errors={errors.date}
-                                        onChangeText={handleChange('date')}
-                                        onBlur={handleBlur('date')}
-                                        value={values.date}
-                                    />
-                                    <CustomInput
-                                        touched={touched.type}
-                                        label="Tipo"
-                                        errors={errors.type}
-                                        onChangeText={handleChange('type')}
-                                        onBlur={handleBlur('type')}
-                                        value={values.type}
-                                    />
-                                    <CustomInput
-                                        touched={touched.operation}
-                                        label="Operación"
-                                        errors={errors.operation}
-                                        onChangeText={handleChange('operation')}
-                                        onBlur={handleBlur('operation')}
-                                        value={values.operation}
-                                    />
+
+
+                                    <Text style={globalStyles.inputLabel}>Tipo</Text>
+                                    <Picker
+                                        selectedValue={values.type}
+                                        onValueChange={(itemValue, itemIndex) => setFieldValue('type', itemValue)}
+                                        style={globalStyles.picker}
+                                    >
+
+                                        <Picker.Item label={'Aclaración'} value={"Aclaración"} />
+                                        <Picker.Item label={'Presupuesto'} value={"presupuesto"} />
+                                        <Picker.Item label={'Asesoria'} value={"Asesoria"} />
+
+                                    </Picker>
+                                    <Text style={globalStyles.inputLabel}>Operacion</Text>
+                                    <Picker
+                                        selectedValue={values.operation}
+                                        onValueChange={(itemValue, itemIndex) => setFieldValue('operation', itemValue)}
+                                        style={globalStyles.picker}
+                                    >
+
+                                        <Picker.Item label={'Venta'} value={"Venta"} />
+                                        <Picker.Item label={'Compra'} value={"Compra"} />
+
+                                    </Picker>
                                     <CustomInput
                                         touched={touched.notes}
                                         label="Comentarios"
@@ -202,13 +270,17 @@ const RemindersScreen = () => {
                                 <>
 
                                     <Text style={styles.blueText}>Propuestas</Text>
-                                    <CustomInput
-                                        touched={touched.date}
-                                        label="Fecha de propuesta"
-                                        errors={errors.date}
-                                        onChangeText={handleChange('date')}
-                                        onBlur={handleBlur('date')}
-                                        value={values.date}
+                                    <Text style={globalStyles.inputLabel}>Fecha de propuesta</Text>
+
+
+                                    <DatePicker
+                                        date={values.date}
+                                        onDateChange={(date) => setFieldValue('date', date)}
+                                        style={{
+                                            marginBottom: 20,
+                                        }}
+                                        locale="es-MX"
+                                        mode="date"
                                     />
 
                                     <CustomInput
@@ -240,48 +312,6 @@ const RemindersScreen = () => {
                                         </View>
                                         <Text style={globalStyles.inputLabel}>MXN</Text>
                                     </View>
-
-                                    <Text style={globalStyles.inputLabel}>Agente Opcionador</Text>
-                                    <Picker
-                                        selectedValue={values.agent}
-                                        onValueChange={(itemValue, itemIndex) => setFieldValue('agent', itemValue)}
-                                        style={globalStyles.picker}
-                                    >
-                                        {
-                                            contacts.map(contact => (
-                                                <Picker.Item key={contact.id} label={`${contact.fname} ${contact.lname}`} value={`${contact.fname} ${contact.lname}`} />
-                                            ))
-                                        }
-                                    </Picker>
-
-
-                                    <Text style={globalStyles.inputLabel}>Oficina</Text>
-                                    <Picker
-                                        selectedValue={values.office}
-                                        onValueChange={(itemValue, itemIndex) => setFieldValue('office', itemValue)}
-                                        style={globalStyles.picker}
-                                    >
-                                        {
-                                            offices.map(office => (
-                                                <Picker.Item key={office.id} label={office.name} value={office.name} />
-                                            ))
-                                        }
-                                    </Picker>
-
-
-                                    <Text style={globalStyles.inputLabel}>Agente Comprador</Text>
-                                    <Picker
-                                        selectedValue={values.buyerAgent}
-                                        onValueChange={(itemValue, itemIndex) => setFieldValue('buyerAgent', itemValue)}
-                                        style={globalStyles.picker}
-                                    >
-                                        {
-                                            contacts.map(contact => (
-                                                <Picker.Item key={contact.id} label={`${contact.fname} ${contact.lname}`} value={`${contact.fname} ${contact.lname}`} />
-                                            ))
-                                        }
-                                    </Picker>
-
 
                                     <CustomInput
                                         touched={touched.notes}
@@ -318,7 +348,7 @@ const RemindersScreen = () => {
 
 
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
 
 
     )
