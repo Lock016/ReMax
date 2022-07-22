@@ -11,6 +11,7 @@ import CustomSwitch from '../../components/CustomSwitch'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { startGettingOffices, startGettingContacts } from '../../store/contacts'
 import { Picker } from '@react-native-picker/picker'
+import { startGettingProperties } from '../../store/properties'
 
 
 const eventConfig: AddCalendarEvent.CreateOptions = {
@@ -40,8 +41,11 @@ const RemindersScreen = () => {
     useEffect(() => {
         dispatch(startGettingOffices())
         dispatch(startGettingContacts())
+        dispatch(startGettingProperties())
     }, [])
     const { offices, contacts } = useAppSelector(state => state.contacts)
+
+    const { properties } = useAppSelector(state => state.properties)
 
 
     return (
@@ -59,8 +63,8 @@ const RemindersScreen = () => {
                         property: '',
                         date: '',
                         notes: '',
-                        
-                        
+
+
                         type: '',
                         operation: '',
 
@@ -81,10 +85,10 @@ const RemindersScreen = () => {
                             date: yup.string().required('La fecha de recordatorio es requerida'),
                             option: yup.string().required('El tipo de actividad es requerido'),
                             notes: yup.string().required('Las notas son requeridas'),
-                            
+
                             type: yup.string().required('El tipo es requerido'),
                             operation: yup.string().required('La operación es requerida'),
-                            
+
                             currency: yup.boolean().required('La moneda es requerida'),
                             agent: yup.string().required('El agente es requerido'),
                             office: yup.string().required('El oficina es requerida'),
@@ -110,15 +114,18 @@ const RemindersScreen = () => {
                                     "Propuestas"
                                 ]}
                             />
-
-                            <CustomInput
-                                touched={touched.property}
-                                label="Propiedad"
-                                errors={errors.property}
-                                onChangeText={handleChange('property')}
-                                onBlur={handleBlur('property')}
-                                value={values.property}
-                            />
+                            <Text style={globalStyles.inputLabel}>Propiedad</Text>
+                            <Picker
+                                selectedValue={values.property}
+                                onValueChange={(itemValue, itemIndex) => setFieldValue('property', itemValue)}
+                                style={globalStyles.picker}
+                            >
+                                {
+                                    properties.map(property => (
+                                        <Picker.Item key={property.id} label={property.address} value={property.address} />
+                                    ))
+                                }
+                            </Picker>
 
                             {
                                 values.option === 'Recorrrido' &&
@@ -203,7 +210,7 @@ const RemindersScreen = () => {
                                         onBlur={handleBlur('date')}
                                         value={values.date}
                                     />
-                                 
+
                                     <CustomInput
                                         touched={touched.quantity}
                                         label="Cantidad"
@@ -242,7 +249,7 @@ const RemindersScreen = () => {
                                     >
                                         {
                                             contacts.map(contact => (
-                                                <Picker.Item key={contact.id} label={`${contact.fname} ${contact.lname}` } value={`${contact.fname} ${contact.lname}`} />
+                                                <Picker.Item key={contact.id} label={`${contact.fname} ${contact.lname}`} value={`${contact.fname} ${contact.lname}`} />
                                             ))
                                         }
                                     </Picker>
@@ -260,7 +267,7 @@ const RemindersScreen = () => {
                                             ))
                                         }
                                     </Picker>
-                                    
+
 
                                     <Text style={globalStyles.inputLabel}>Agente Comprador</Text>
                                     <Picker
@@ -275,7 +282,7 @@ const RemindersScreen = () => {
                                         }
                                     </Picker>
 
-                                 
+
                                     <CustomInput
                                         touched={touched.notes}
                                         label="Comentarios"
