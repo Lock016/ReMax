@@ -9,7 +9,6 @@ type Props = {
 export function TopBar({ onPressElement }: Props) {
     return (
         <View style={styles.container}>
-            <Avatar />
             <RefreshButton onPressElement={onPressElement} />
         </View>
     );

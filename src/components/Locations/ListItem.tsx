@@ -15,16 +15,16 @@ export const ListItem = ({ item, onPressElement }: Props) => {
             ]}
             onPress={() => onPressElement(item)}
         >
-            <View style={[styles.logo, { backgroundColor: item.color }]}>
+            <View style={[styles.logo, { backgroundColor: 'transparent' }]}>
                 <Image
-                    source={item.img}
+                    source={require('../../assets/images/ReMax_Balloon.png')}
                     style={styles.logoImage}
                     resizeMode="contain"
                 />
             </View>
             <View>
-                <Text style={styles.title}>{item.name}</Text>
-                <Text style={styles.direction}>{item.direction}</Text>
+                <Text style={styles.title}>{item.address}</Text>
+                <Text style={styles.direction}>{item.price}</Text>
             </View>
         </Pressable>
     );

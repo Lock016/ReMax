@@ -3,11 +3,11 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Marker } from 'react-native-maps';
 import Animated from 'react-native-reanimated';
 import { useMarkerAnimation } from '../../hooks/useMarkerAnimation';
+import { Property } from '../../interfaces/propertiesInterface';
 
 interface CustomMarkerProps {
     id: string;
-    selectedMarker: string | null;
-    color: string;
+    selectedMarker: Property | null;
     latitude: number;
     longitude: number;
     children?: React.ReactNode;
@@ -16,27 +16,25 @@ interface CustomMarkerProps {
 export const CustomMarker = ({
     id,
     selectedMarker,
-    color,
     latitude,
     longitude,
     children
 }: CustomMarkerProps) => {
     const scale = useMarkerAnimation({ id, selectedMarker });
 
+    console.log(latitude, longitude)
     return (
         <Marker
             coordinate={{
                 latitude: latitude,
                 longitude: longitude,
             }}
-            description={"Johan es caca"}
         >
             <View style={styles.markerWrapper}>
                 <Animated.View
                     style={[
                         styles.marker,
                         {
-                            backgroundColor: color,
                             transform: [{ scale: scale }],
                         },
                     ]}
