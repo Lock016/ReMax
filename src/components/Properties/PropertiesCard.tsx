@@ -1,15 +1,22 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { propertiesInterface } from '../../interfaces/propertiesInterface';
+import { Property } from '../../interfaces/propertiesInterface';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import { setActiveProperty } from '../../store/properties';
 import React from 'react'
+import { numberWithCommas } from '../../helpers/NumberWithCommas';
 
 interface Nav extends StackNavigationProp<any, any> { }
 
-const PropertiesCard = ({ title, price, image, type, id, item}: propertiesInterface) => {
+interface Props {
+    property: Property
+}
+
+const PropertiesCard = ({ property }: Props) => {
+
+    const { images, address, price, type } = property;
 
     const dispatch = useAppDispatch();
 
@@ -27,20 +34,20 @@ const PropertiesCard = ({ title, price, image, type, id, item}: propertiesInterf
         <TouchableOpacity 
             style={{ ...styles.cardContainer, marginHorizontal: 20}}
             onPress={ () => {
-                dispatch(setActiveProperty(item));
+                dispatch(setActiveProperty(property));
                 navigation.navigate('PropertyDetail');
             }}
             activeOpacity={0.9}
         >
             <View style={ styles.imageContainer}>
                 <Image
-                    source={{ uri: image }}
+                    source={{ uri: images[0].image }}
                     style={ styles.image }
                 />
             </View>
             <View style={ styles.infoContainer}>
-                <Text style= { styles.propertyTitle}>{ truncate(title) }</Text>
-                <Text style= { styles.propertyPrice}>{ price }</Text>
+                <Text style= { styles.propertyTitle}>{ truncate(address) }</Text>
+                <Text style= { styles.propertyPrice}>{ `$ ${numberWithCommas(price)}` }</Text>
                 <Text style= { styles.propertyType}>{ type }</Text>
             </View>
             <Icon
