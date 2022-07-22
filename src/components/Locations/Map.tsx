@@ -1,20 +1,47 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { useDispatch } from 'react-redux';
+import { useMap } from '../../hooks/useMap';
+import { BottomSheet } from './BottomSheet';
 import { CustomMarker } from './CustomMarker';
 import { mapStyle } from './mapStyle';
-import { markers } from './Markers';
+import { TopBar } from './TopBar';
+import { startGettingProperties } from '../../store/properties/thunks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 export const Map = () => {
+
+    const {
+        mapRef,
+        selectedMarker,
+        handleNavigateToPoint,
+        handleResetInitialPosition,
+    } = useMap();
+
+    const dispatch = useAppDispatch();
+    const properties = useAppSelector(state => state.properties.properties);
+
+    useEffect(() => {
+        dispatch(startGettingProperties());
+    }, [])
+    // require('../../assets/images/ReMax_Balloon.png')
+    const markers = properties.map(property => ({
+        
+    }));
+
+
     return (
         <View style={styles.container}>
+            <TopBar onPressElement={handleResetInitialPosition} />
             <MapView
+                ref={mapRef}
                 customMapStyle={mapStyle}
                 provider={PROVIDER_GOOGLE}
                 style={styles.mapStyle}
                 initialRegion={{
-                    latitude: 41.3995345,
-                    longitude: 2.1909796,
+                    latitude: 24.032616181389447,
+                    longitude: -104.66120022698489,
                     latitudeDelta: 0.003,
                     longitudeDelta: 0.003,
                 }}
@@ -35,6 +62,8 @@ export const Map = () => {
                     ))
                 }
             </MapView>
+            <BottomSheet onPressElement={handleNavigateToPoint} />
+
         </View>
     );
 }

@@ -19,6 +19,7 @@ export const startGettingProperties = () => {
                 images: property.images,
             }));
 
+            dispatch(setProperties(properties));
             console.log(properties)
 
         } catch (error: any) {
