@@ -10,6 +10,7 @@ remaxApi.interceptors.request.use(
         }
         return config;
     }
+    
 );
 
 export default remaxApi;
