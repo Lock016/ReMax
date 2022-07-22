@@ -9,6 +9,7 @@ import { mapStyle } from './mapStyle';
 import { TopBar } from './TopBar';
 import { startGettingProperties } from '../../store/properties/thunks';
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { ActiveBottomSheet } from './ActiveBottomSheet';
 
 export const Map = () => {
 
@@ -20,17 +21,14 @@ export const Map = () => {
     } = useMap();
 
     const dispatch = useAppDispatch();
-    const properties = useAppSelector(state => state.properties.properties);
+    const { properties, loading } = useAppSelector(state => state.properties);
 
     useEffect(() => {
         dispatch(startGettingProperties());
     }, [])
     // require('../../assets/images/ReMax_Balloon.png')
-    const markers = properties.map(property => ({
-        
-    }));
 
-
+    console.log(properties)
     return (
         <View style={styles.container}>
             <TopBar onPressElement={handleResetInitialPosition} />
@@ -48,21 +46,28 @@ export const Map = () => {
                 mapType="standard"
             >
                 {
-                    markers.map((marker) => (
+                    properties.map((marker) => (
                         <CustomMarker
+                            id={(marker.id).toString()}
                             key={marker.id}
-                            id={marker.id}
-                            selectedMarker={null}
-                            color={marker.color}
-                            latitude={marker.latitude}
-                            longitude={marker.longitude}
+                            selectedMarker={selectedMarker}
+                            latitude={parseFloat(marker.lt)}
+                            longitude={parseFloat(marker.ln)}
                         >
                         </CustomMarker>
 
                     ))
                 }
             </MapView>
-            <BottomSheet onPressElement={handleNavigateToPoint} />
+            {
+                !loading && selectedMarker == null &&
+                <BottomSheet onPressElement={handleNavigateToPoint} />
+            }
+
+            {
+                !loading && selectedMarker != null &&
+                <ActiveBottomSheet activeData={selectedMarker} />
+            }
 
         </View>
     );

@@ -1,20 +1,16 @@
-import React from 'react';
+import React from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native';
 import ScrollBottomSheet from 'react-native-scroll-bottom-sheet';
-import { useAppSelector } from '../../hooks';
-import { Item } from '../../interfaces/locationsInterfaces';
-import { ListItem } from './ListItem';
-import { markers } from './Markers';
+import { Property } from '../../interfaces/propertiesInterface'
+import { ActiveDetails } from './ActiveDetails';
 
-const windowHeight = Dimensions.get('window').height;
-
-interface Props {
-    onPressElement: (item: Item) => void;
+interface ActiveBottomSheetProps {
+    activeData: Property;
 }
 
-export function BottomSheet({ onPressElement }: Props) {
-    const { properties } = useAppSelector(state => state.properties);
-
+export const ActiveBottomSheet = ({ activeData }: ActiveBottomSheetProps) => {
+    const windowHeight = Dimensions.get('window').height;
+    console.log("selectedMarker", activeData)
     return (
         <ScrollBottomSheet
             componentType="FlatList"
@@ -25,14 +21,14 @@ export function BottomSheet({ onPressElement }: Props) {
                     <View style={styles.panelHandle} />
                 </View>
             )}
-            data={properties}
+            data={[activeData]}
             keyExtractor={(i) => (i.id).toString()}
-            renderItem={({ item }) => (
-                <ListItem item={item} onPressElement={onPressElement} />
+            renderItem={(data) => (
+                <ActiveDetails data={Object.values(data)[0]} />
             )}
             contentContainerStyle={styles.contentContainerStyle}
         />
-    );
+    )
 }
 
 const styles = StyleSheet.create({
